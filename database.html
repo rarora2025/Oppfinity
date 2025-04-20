@@ -3,10 +3,215 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oppfinity - Research Database</title>
+    <title>Professor Database - Oppfinity</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .database-container {
+            padding: 120px 5% 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .search-wrapper {
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .professor-table {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: var(--primary-color);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .available {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .limited {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .contact-btn {
+            padding: 5px 10px;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            transition: background 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .contact-btn:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Premium Modal Styles */
+        .premium-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .premium-title {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .premium-features {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            color: #444;
+        }
+
+        .feature-item i {
+            color: var(--primary-color);
+            margin-right: 10px;
+        }
+
+        .upgrade-btn {
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .upgrade-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .filter-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -17,52 +222,143 @@
             <a href="index.html">Home</a>
             <a href="index.html#about">About</a>
             <a href="index.html#how-it-works">How It Works</a>
-            <a href="index.html#universities">Universities</a>
-            <a href="index.html#contact">Contact</a>
+            <a href="#" class="active">Database</a>
         </div>
     </nav>
 
-    <section class="database-section">
-        <div class="database-content">
-            <h1>Research Opportunities Database</h1>
-            <p>Our comprehensive database of research opportunities is coming soon!</p>
-            <div class="database-placeholder">
-                <div class="placeholder-text">
-                    <h2>Coming Soon</h2>
-                    <p>We're currently building a powerful database that will include:</p>
-                    <ul>
-                        <li>Professor contact information</li>
-                        <li>Research topics and areas</li>
-                        <li>Project descriptions</li>
-                        <li>Application requirements</li>
-                        <li>Available positions</li>
-                    </ul>
+    <div class="database-container">
+        <div class="search-wrapper">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search by name, university, or research interest...">
+            </div>
+            <div class="filters">
+                <button class="filter-btn active">All</button>
+                <button class="filter-btn">Available Now</button>
+                <button class="filter-btn">Computer Science</button>
+                <button class="filter-btn">Life Sciences</button>
+                <button class="filter-btn">Physical Sciences</button>
+            </div>
+        </div>
+
+        <div class="professor-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Professor</th>
+                        <th>University</th>
+                        <th>Research Interests</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Dr. David Patterson</td>
+                        <td>UC Berkeley</td>
+                        <td>Computer Architecture, RISC-V, Operating Systems</td>
+                        <td><span class="status-badge available">Available</span></td>
+                        <td><button class="contact-btn" onclick="showPremiumModal()">Contact</button></td>
+                    </tr>
+                    <tr>
+                        <td>Dr. Jennifer Doudna</td>
+                        <td>UC Berkeley</td>
+                        <td>CRISPR, Gene Editing, Biochemistry</td>
+                        <td><span class="status-badge available">Available</span></td>
+                        <td><button class="contact-btn" onclick="showPremiumModal()">Contact</button></td>
+                    </tr>
+                    <tr>
+                        <td>Dr. Fei-Fei Li</td>
+                        <td>Stanford University</td>
+                        <td>AI, Computer Vision, Machine Learning</td>
+                        <td><span class="status-badge limited">Limited</span></td>
+                        <td><button class="contact-btn" onclick="showPremiumModal()">Contact</button></td>
+                    </tr>
+                    <tr>
+                        <td>Dr. Robert Langer</td>
+                        <td>MIT</td>
+                        <td>Bioengineering, Drug Delivery, Tissue Engineering</td>
+                        <td><span class="status-badge available">Available</span></td>
+                        <td><button class="contact-btn" onclick="showPremiumModal()">Contact</button></td>
+                    </tr>
+                    <tr>
+                        <td>Dr. Angela Belcher</td>
+                        <td>MIT</td>
+                        <td>Materials Science, Nanotechnology, Clean Energy</td>
+                        <td><span class="status-badge available">Available</span></td>
+                        <td><button class="contact-btn" onclick="showPremiumModal()">Contact</button></td>
+                    </tr>
+                    <tr>
+                        <td>Dr. Daniela Rus</td>
+                        <td>MIT</td>
+                        <td>Robotics, AI, Autonomous Systems</td>
+                        <td><span class="status-badge limited">Limited</span></td>
+                        <td><button class="contact-btn" onclick="showPremiumModal()">Contact</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Premium Modal -->
+    <div class="premium-modal" id="premiumModal">
+        <div class="modal-content">
+            <i class="fas fa-times modal-close" onclick="hidePremiumModal()"></i>
+            <h2 class="premium-title">🌟 Upgrade to Premium</h2>
+            <p>Get unlimited access to our full database of research opportunities!</p>
+            <div class="premium-features">
+                <div class="feature-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Direct contact with professors</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Automated email outreach</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Premium research opportunities</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Application assistance</span>
                 </div>
             </div>
+            <a href="payment.html" class="upgrade-btn">Upgrade Now</a>
         </div>
-    </section>
+    </div>
 
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>Oppfinity</h3>
-                <p>Connecting students with research opportunities</p>
-            </div>
-            <div class="footer-section">
-                <h3>Quick Links</h3>
-                <a href="index.html">Home</a>
-                <a href="index.html#about">About</a>
-                <a href="index.html#how-it-works">How It Works</a>
-                <a href="index.html#universities">Universities</a>
-            </div>
-            <div class="footer-section">
-                <h3>Contact</h3>
-                <p>Email: contact@oppfinity.com</p>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 Oppfinity. All rights reserved.</p>
-        </div>
-    </footer>
+    <script>
+        // Premium Modal Functions
+        function showPremiumModal() {
+            document.getElementById('premiumModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hidePremiumModal() {
+            document.getElementById('premiumModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Show premium modal on search
+        document.getElementById('searchInput').addEventListener('input', function() {
+            if (this.value.length > 0) {
+                showPremiumModal();
+            }
+        });
+
+        // Show premium modal on filter click
+        document.querySelectorAll('.filter-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                showPremiumModal();
+            });
+        });
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('premiumModal')) {
+                hidePremiumModal();
+            }
+        }
+    </script>
 </body>
 </html> 

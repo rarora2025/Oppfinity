@@ -52,25 +52,6 @@ window.addEventListener('scroll', function() {
     }
 });
 
-// Form submission handling
-const contactForm = document.querySelector('.contact-form');
-if (contactForm) {
-    contactForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Get form data
-        const formData = new FormData(this);
-        const data = Object.fromEntries(formData);
-        
-        // Here you would typically send the data to your server
-        console.log('Form submitted:', data);
-        
-        // Show success message
-        alert('Thank you for your message! We will get back to you soon.');
-        this.reset();
-    });
-}
-
 // Add animation to CTA button
 const ctaButton = document.querySelector('.cta-button');
 if (ctaButton) {
@@ -85,18 +66,6 @@ if (ctaButton) {
     });
 }
 
-// Add hover effect to university cards
-const universityCards = document.querySelectorAll('.university-card');
-universityCards.forEach(card => {
-    card.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateY(-5px)';
-    });
-    
-    card.addEventListener('mouseleave', function() {
-        this.style.transform = 'translateY(0)';
-    });
-});
-
 // Add loading animation for images
 const images = document.querySelectorAll('img');
 images.forEach(img => {
@@ -105,4 +74,23 @@ images.forEach(img => {
     });
     img.style.opacity = '0';
     img.style.transition = 'opacity 0.5s ease';
+});
+
+// Handle research interest "Other" option
+const researchInterest = document.getElementById('researchInterest');
+const otherInterest = document.getElementById('otherInterest');
+
+researchInterest.addEventListener('change', function() {
+    if (this.value === 'other') {
+        otherInterest.style.display = 'block';
+        otherInterest.required = true;
+        // Smooth appearance
+        otherInterest.style.opacity = '0';
+        setTimeout(() => {
+            otherInterest.style.opacity = '1';
+        }, 10);
+    } else {
+        otherInterest.style.display = 'none';
+        otherInterest.required = false;
+    }
 }); 
