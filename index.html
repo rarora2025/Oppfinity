@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oppfinity - Connect with Research Opportunities</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="opp-logo.png" alt="Oppfinity Logo" class="logo-img">
+            <h1>Oppfinity</h1>
+        </div>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="#contact">Contact</a>
+            <div id="authNavContainer">
+                <a href="auth.html" class="auth-nav-btn" id="authNavBtn">Login / Sign Up</a>
+                <div id="userNavProfile" class="user-nav-profile" style="display: none;">
+                    <span class="user-name-display">Welcome, User!</span>
+                    <button id="signOutNavBtn" class="sign-out-btn">Sign Out</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1 class="animate__animated animate__fadeInDown">Connect with Perfect Research Opportunities</h1>
+            <p class="animate__animated animate__fadeInUp">We match high school students with college professors for research opportunities</p>
+            <a href="#contact" class="cta-button animate__animated animate__fadeInUp">Get Started</a>
+        </div>
+    </section>
+
+    <!-- User Dashboard Section -->
+    <section id="userDashboard" class="user-dashboard" style="display: none;">
+        <div class="container">
+            <div class="dashboard-header">
+                <h2>Welcome to Your Dashboard</h2>
+                <p>Complete your profile to get matched with research opportunities</p>
+            </div>
+            
+            <div class="dashboard-content">
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="profile-avatar" id="dashboardProfileAvatar">
+                            <span id="dashboardUserInitial">U</span>
+                            <img id="dashboardProfilePhoto" src="" alt="Profile Photo" style="display: none;">
+                            <div class="upload-overlay">
+                                <svg fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <input type="file" id="dashboardProfilePhotoInput" accept="image/*" style="display: none;">
+                        </div>
+                        <div class="profile-info">
+                            <h3 id="dashboardUserName">User Name</h3>
+                            <p id="dashboardUserEmail">user@example.com</p>
+                        </div>
+                    </div>
+                    
+                    <form id="userProfileForm" class="profile-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fieldOfInterest">Field of Interest</label>
+                                <select id="fieldOfInterest" required>
+                                    <option value="">Select your field</option>
+                                    <option value="computer-science">Computer Science</option>
+                                    <option value="biology">Biology</option>
+                                    <option value="chemistry">Chemistry</option>
+                                    <option value="physics">Physics</option>
+                                    <option value="mathematics">Mathematics</option>
+                                    <option value="engineering">Engineering</option>
+                                    <option value="psychology">Psychology</option>
+                                    <option value="economics">Economics</option>
+                                    <option value="medicine">Medicine</option>
+                                    <option value="environmental-science">Environmental Science</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="location">Location</label>
+                                <input type="text" id="location" placeholder="City, State" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="dateOfBirth">Date of Birth</label>
+                                <input type="date" id="dateOfBirth" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="schoolName">School Name</label>
+                                <input type="text" id="schoolName" placeholder="Your high school" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="researchInterests">Research Interests (Optional)</label>
+                            <textarea id="researchInterests" placeholder="Describe your research interests, projects you've worked on, or areas you'd like to explore..." rows="3"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="save-profile-btn">Save Profile</button>
+                    </form>
+                </div>
+                
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">📊</div>
+                        <h4>Profile Completion</h4>
+                        <p id="profileCompletion">0%</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <h4>Research Matches</h4>
+                        <p>Coming Soon</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📚</div>
+                        <h4>Opportunities</h4>
+                        <p>Explore Now</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" class="how-it-works">
+        <h2>How It Works</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Create Your Profile</h3>
+                <p>Tell us about your interests and research goals</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Find Professors</h3>
+                <p>Find professors around you that fit your research interests</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Get Connected</h3>
+                <p>We handle the cold emailing process for you, reaching out to all matching professors</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <h2>🚀 Access Our Database</h2>
+        <p style="font-size: 1.2rem; margin-bottom: 3rem; opacity: 0.9;">Join hundreds of students who've found their perfect research opportunities</p>
+        
+        <form id="contactForm" class="contact-form" action="https://formsubmit.co/RARORA2025@GMAIL.COM" method="POST">
+            <!-- Honeypot -->
+            <input type="text" name="_honey" style="display:none">
+            <!-- Disable Captcha -->
+            <input type="hidden" name="_captcha" value="false">
+            <!-- Success Page -->
+            <input type="hidden" name="_next" value="database.html">
+            <!-- Additional security headers -->
+            <input type="hidden" name="_subject" value="New Database Access Request">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_autoresponse" value="Thank you for your interest in Oppfinity! We've received your request to access our database and will get back to you shortly.">
+            
+            <div class="form-group">
+                <input type="text" name="name" id="name" placeholder="Enter your full name" required>
+            </div>
+            
+            <div class="form-group">
+                <input type="email" name="email" id="email" placeholder="your.email@example.com" required>
+            </div>
+
+            <div class="form-group">
+                <textarea name="notes" id="notes" placeholder="Tell us about your research interests, goals, experience, or any specific questions you have... (Optional)"></textarea>
+            </div>
+            
+            <button type="submit">🎯 Access Database Now</button>
+        </form>
+        
+        <div id="formMessage" class="form-message"></div>
+        
+        <!-- Success indicators -->
+        <div style="margin-top: 2rem; display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+            <div style="text-align: center; opacity: 0.8;">
+                <div style="font-size: 2rem;">📚</div>
+                <div style="font-size: 0.9rem;">500+ Professors</div>
+            </div>
+            <div style="text-align: center; opacity: 0.8;">
+                <div style="font-size: 2rem;">🎓</div>
+                <div style="font-size: 0.9rem;">Top Universities</div>
+            </div>
+            <div style="text-align: center; opacity: 0.8;">
+                <div style="font-size: 2rem;">⚡</div>
+                <div style="font-size: 0.9rem;">Instant Access</div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Oppfinity</h3>
+                <p>Connecting students with research opportunities</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <a href="#home">Home</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p>Email: rarora2025@gmail.com</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Oppfinity. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+</body>
+</html> 

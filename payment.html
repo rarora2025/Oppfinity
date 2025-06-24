@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oppfinity - Premium Access Payment</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        .payment-container {
+            max-width: 800px;
+            margin: 6rem auto 0;
+            padding: 2rem;
+            text-align: center;
+        }
+        .payment-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+        }
+        .plan-options {
+            display: flex;
+            justify-content: space-around;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .plan-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            width: 250px;
+            transition: transform 0.3s;
+        }
+        .plan-card:hover {
+            transform: translateY(-5px);
+        }
+        .plan-card.selected {
+            border: 2px solid #4CAF50;
+        }
+        .plan-price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4CAF50;
+            margin: 1rem 0;
+        }
+        .plan-features {
+            text-align: left;
+            margin: 1rem 0;
+        }
+        .plan-features li {
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
+        }
+        .plan-features li::before {
+            content: "✓";
+            color: #4CAF50;
+            margin-right: 0.5rem;
+            font-weight: bold;
+        }
+        #payment-form {
+            max-width: 500px;
+            margin: 2rem auto;
+        }
+        .form-row {
+            margin: 1rem 0;
+        }
+        #card-element {
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+        }
+        #card-errors {
+            color: #dc3545;
+            margin: 1rem 0;
+        }
+        #submit-button {
+            background: #4CAF50;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+        }
+        #submit-button:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <h1>Oppfinity</h1>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="index.html#about">About</a>
+            <a href="index.html#how-it-works">How It Works</a>
+            <a href="index.html#universities">Reviews</a>
+            <a href="index.html#contact">Contact</a>
+        </div>
+    </nav>
+
+    <div class="payment-container">
+        <h1>Get Premium Access</h1>
+        <p>Unlock the full potential of Oppfinity's research database</p>
+        
+        <div class="payment-card">
+            <div class="plan-card" style="margin: 0 auto; max-width: 400px;">
+                <h3>Premium Access</h3>
+                <div class="plan-price">$10.99</div>
+                <ul class="plan-features">
+                    <li>Full database access</li>
+                    <li>Advanced search features</li>
+                    <li>Priority support</li>
+                    <li>One-time payment</li>
+                </ul>
+            </div>
+
+            <form id="payment-form">
+                <div class="form-row">
+                    <label for="card-element">Credit or debit card</label>
+                    <div id="card-element"></div>
+                    <div id="card-errors" role="alert"></div>
+                </div>
+                <button type="submit" id="submit-button">Get Premium Access</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Oppfinity</h3>
+                <p>Connecting students with research opportunities</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <a href="index.html">Home</a>
+                <a href="index.html#about">About</a>
+                <a href="index.html#how-it-works">How It Works</a>
+                <a href="index.html#universities">Universities</a>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p>Email: rarora2025@gmail.com</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Oppfinity. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Stripe public key
+        const stripe = Stripe('pk_live_51RG2OLA9NPiijwfcdkynVJVgUIfdwdIEG6RmXI3wSoTftXjvPls6Y1kDGbtB3ELlakMGu9cYFYyxivNidPwlGYiB00IhLCh7ZW');
+        const elements = stripe.elements();
+        const card = elements.create('card');
+        card.mount('#card-element');
+
+        const form = document.getElementById('payment-form');
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const {error, paymentMethod} = await stripe.createPaymentMethod({
+                type: 'card',
+                card: card,
+            });
+
+            if (error) {
+                const errorElement = document.getElementById('card-errors');
+                errorElement.textContent = error.message;
+            } else {
+                // Send paymentMethod.id to your server
+                try {
+                    const response = await fetch('/create-payment-intent', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            paymentMethodId: paymentMethod.id,
+                            amount: 1099 // $10.99 in cents
+                        }),
+                    });
+
+                    const result = await response.json();
+
+                    if (result.error) {
+                        const errorElement = document.getElementById('card-errors');
+                        errorElement.textContent = result.error;
+                    } else {
+                        // Handle successful payment
+                        window.location.href = '/success.html';
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    const errorElement = document.getElementById('card-errors');
+                    errorElement.textContent = 'An error occurred. Please try again.';
+                }
+            }
+        });
+    </script>
+</body>
+</html> 

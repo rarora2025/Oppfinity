@@ -1,0 +1,9 @@
+{
+  "name": "oppfinity",
+  "version": "1.0.0",
+  "description": "Oppfinity payment processing",
+  "main": "index.js",
+  "dependencies": {
+    "stripe": "^12.0.0"
+  }
+} 

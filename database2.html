@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oppfinity - Professor Database</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .database-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .database-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .professors-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+            background: white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .professors-table th,
+        .professors-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .professors-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+        .professors-table tr:hover {
+            background-color: #f5f5f5;
+        }
+        .professors-table td {
+            vertical-align: top;
+        }
+        .search-container {
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        .search-input {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 300px;
+            font-family: 'Poppins', sans-serif;
+        }
+        .filter-select {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <h1>Oppfinity</h1>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="index.html#about">About</a>
+            <a href="index.html#how-it-works">How It Works</a>
+            <a href="index.html#universities">Reviews</a>
+            <a href="index.html#contact">Contact</a>
+        </div>
+    </nav>
+
+    <div class="database-container">
+        <div class="database-header">
+            <h1>Professor Database</h1>
+            <p>Find research mentors that match your interests</p>
+        </div>
+
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search professors...">
+            <select id="universityFilter" class="filter-select">
+                <option value="">All Universities</option>
+                <option value="Princeton">Princeton University</option>
+                <option value="Rutgers">Rutgers University</option>
+                <option value="NJCU">New Jersey City University</option>
+                <option value="FDU">Fairleigh Dickinson University</option>
+                <option value="Ramapo">Ramapo College</option>
+                <option value="Rider">Rider University</option>
+                <option value="Monmouth">Monmouth University</option>
+                <option value="William Paterson">William Paterson University</option>
+            </select>
+        </div>
+
+        <table class="professors-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>University</th>
+                    <th>Research Interests</th>
+                    <th>Research Focus</th>
+                    <th>Email</th>
+                    <th>Mentorship Experience</th>
+                    <th>Notable Publications</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Jacob Bastian</td>
+                    <td>Rutgers University – New Brunswick</td>
+                    <td>Public Economics; Labor Economics</td>
+                    <td>Studies how public policies affect poverty, labor supply, and social outcomes</td>
+                    <td>jacob.bastian@rutgers.edu</td>
+                    <td>Advisor to graduate economics students; supervised research assistants</td>
+                    <td>"The Rise of Working Mothers and the 1975 Earned Income Tax Credit" (2020); "EITC and Maternal Time Use" (2022)</td>
+                </tr>
+                <tr>
+                    <td>Michael D. Bordo</td>
+                    <td>Rutgers University – New Brunswick</td>
+                    <td>Monetary History; Financial History; Monetary Policy; International Economics</td>
+                    <td>Renowned economic historian examining central bank policy and financial crises over centuries</td>
+                    <td>bordo@economics.rutgers.edu</td>
+                    <td>Mentored numerous Ph.D. students in economic history; directs research center involving graduate researchers</td>
+                    <td>18 books on monetary economics; ~200 journal articles</td>
+                </tr>
+                <tr>
+                    <td>Jennifer Hunt</td>
+                    <td>Rutgers University – New Brunswick</td>
+                    <td>Labor Economics; Economic Policy; Innovation</td>
+                    <td>Researches labor market dynamics, unemployment, and the economics of innovation and immigration</td>
+                    <td>jennifer.hunt@rutgers.edu</td>
+                    <td>Former Chief Economist of the U.S. Department of Labor; Ph.D. advisor for graduate students</td>
+                    <td>"Why Do Women Leave Science and Engineering?" (2010); "The Impact of Immigration on the U.S. Labor Market" (2019)</td>
+                </tr>
+                <tr>
+                    <td>Alan S. Blinder</td>
+                    <td>Princeton University</td>
+                    <td>Monetary Policy; Macroeconomics; Central Banking</td>
+                    <td>A leading macroeconomist and former Federal Reserve Vice Chair, known for work on central bank communication and fiscal policy</td>
+                    <td>blinder@princeton.edu</td>
+                    <td>Mentor to many Princeton economics Ph.D. students; co-founded Princeton's Center for Economic Policy Studies</td>
+                    <td>After the Music Stopped (2013); "Central Bank Communication and Policy Effectiveness" (2008)</td>
+                </tr>
+                <tr>
+                    <td>Leah Platt Boustan</td>
+                    <td>Princeton University</td>
+                    <td>Economic History; Labor Economics; Migration</td>
+                    <td>Explores the economic history of migration, demographics, and urbanization</td>
+                    <td>lboustan@princeton.edu</td>
+                    <td>Advises Ph.D. students in economic history; co-director of development of junior scholars via NBER projects</td>
+                    <td>Streets of Gold: America's Untold Story of Immigrant Success (2022); "The Great Black Migration and Urban Renewal" (2017)</td>
+                </tr>
+                <tr>
+                    <td>Markus Brunnermeier</td>
+                    <td>Princeton University</td>
+                    <td>Financial Economics; Macroeconomics; Asset Pricing</td>
+                    <td>Researches financial stability and macro-financial linkages</td>
+                    <td>markus@princeton.edu</td>
+                    <td>Ph.D. advisor in economics and finance; directs Princeton's Bendheim Center for Finance</td>
+                    <td>"The Volatility Paradox" (2014); The Euro and the Battle of Ideas (2016)</td>
+                </tr>
+                <tr>
+                    <td>Roland Bénabou</td>
+                    <td>Princeton University</td>
+                    <td>Behavioral Economics; Inequality; Public Economics; Education</td>
+                    <td>Combines economic theory and psychology to study belief formation, inequality, and social mobility</td>
+                    <td>rbenabou@princeton.edu</td>
+                    <td>Has supervised many Ph.D. dissertations in economics; Co-director of Princeton's Griswold Center for Economic Policy</td>
+                    <td>"Belief in a Just World and Redistributive Politics" (2000); "Inequality and Growth: A Review" (2003)</td>
+                </tr>
+                <tr>
+                    <td>Janet M. Currie</td>
+                    <td>Princeton University</td>
+                    <td>Health Economics; Child Welfare; Public Policy</td>
+                    <td>Pioneering research on early-life health and its long-term effects</td>
+                    <td>jcurrie@princeton.edu</td>
+                    <td>Mentored dozens of graduate students; Co-director of Princeton's Center for Health & Wellbeing</td>
+                    <td>"Within-Mother Estimates of the Effects of WIC" (2019); "Child Health as Human Capital" (2009)</td>
+                </tr>
+                <tr>
+                    <td>Pascaline Dupas</td>
+                    <td>Princeton University</td>
+                    <td>Development Economics; Health Economics; Public Finance</td>
+                    <td>Designs and evaluates policies to reduce poverty and improve health in developing countries</td>
+                    <td>pdupas@princeton.edu</td>
+                    <td>Advises many Ph.D. students in development economics; co-leads Princeton's Development Research Program</td>
+                    <td>"The Impact of Free Secondary Education" (2020); "Short‐Term Subsidies and Long‐Term Adoption of Health Products" (2011)</td>
+                </tr>
+                <tr>
+                    <td>Seema Jayachandran</td>
+                    <td>Princeton University</td>
+                    <td>Development Economics; Environmental Economics; Gender & Health</td>
+                    <td>Empirical research on gender disparities, environmental conservation incentives, and health in developing countries</td>
+                    <td>seema@princeton.edu</td>
+                    <td>Mentors Ph.D. students in development economics; Co-director of initiatives to support women in economics</td>
+                    <td>"Cash for Coolants: Evaluating Payments for Pollution Reduction" (2021); "The Roots of Gender Inequality in Developing Countries" (2015)</td>
+                </tr>
+                <tr>
+                    <td>Atif Mian</td>
+                    <td>Princeton University</td>
+                    <td>Finance; Macroeconomics; International Finance</td>
+                    <td>Examines links between household finance, debt cycles, and macroeconomic crises</td>
+                    <td>atif@princeton.edu</td>
+                    <td>Graduate student advisor in both economics and public policy; Director of Princeton's Julis-Rabinowitz Center</td>
+                    <td>House of Debt (2014); "Finance and Business Cycles: The Credit-Driven Household Demand Channel" (2013)</td>
+                </tr>
+                <tr>
+                    <td>Stephen J. Redding</td>
+                    <td>Princeton University</td>
+                    <td>International Trade; Economic Geography; Macroeconomics</td>
+                    <td>Leading expert on international trade and regional economics</td>
+                    <td>reddings@princeton.edu</td>
+                    <td>Has chaired doctoral committees in international economics; Co-directs Princeton's International Economics Section</td>
+                    <td>"The Economics of Isolation: Trade and De-globalization" (2022); "Distance, Skill Deepening and Development" (2016)</td>
+                </tr>
+                <tr>
+                    <td>Richard Rogerson</td>
+                    <td>Princeton University</td>
+                    <td>Labor Economics; Macroeconomics; Economic Policy</td>
+                    <td>Studies labor markets in macroeconomic contexts, including employment fluctuations and work-hours differences</td>
+                    <td>rdr@princeton.edu</td>
+                    <td>Mentors graduate students in macro and labor; Former director of Princeton's labor economics program</td>
+                    <td>"Structural Transformation and Economic Development" (2014); "Taxes, Transfers, and Labor Supply" (2010)</td>
+                </tr>
+                <tr>
+                    <td>Cecilia Rouse</td>
+                    <td>Princeton University</td>
+                    <td>Economics of Education; Labor Economics; Public Economics</td>
+                    <td>Expert on education policy and labor market outcomes</td>
+                    <td>crouse@princeton.edu</td>
+                    <td>Extensive mentorship of public policy students; as Dean of Princeton's SPIA guided many MPA/Ph.D. students</td>
+                    <td>"Democratization or Diversion? The Effect of Community Colleges on Educational Attainment" (2015); "School Vouchers and Student Outcomes" (2013)</td>
+                </tr>
+                <tr>
+                    <td>Ayşegül Şahin</td>
+                    <td>Princeton University</td>
+                    <td>Labor Economics; Macroeconomics</td>
+                    <td>Researches labor market frictions, unemployment dynamics, and gender differences in the labor force</td>
+                    <td>aysegul.sahin@princeton.edu</td>
+                    <td>Has advised many Ph.D. students; co-organizer of mentoring workshops for women in macroeconomics</td>
+                    <td>"Mismatch Unemployment" (2012); "The Unemployment–Vacancy Relationship" (2014)</td>
+                </tr>
+                <tr>
+                    <td>W. Bentley MacLeod</td>
+                    <td>Princeton University</td>
+                    <td>Behavioral & Experimental Economics; Economics of Education; Health Economics</td>
+                    <td>An interdisciplinary economist studying how incentives and institutions affect behavior</td>
+                    <td>wbmacleod@princeton.edu</td>
+                    <td>Mentors students jointly in economics and public affairs; Visiting faculty mentor at Columbia and USC</td>
+                    <td>"Contracts and Ethics: A Theory of Contractual Design" (2007); "Performance Pay and Teachers" (2015)</td>
+                </tr>
+                <tr>
+                    <td>Pietro Ortoleva</td>
+                    <td>Princeton University</td>
+                    <td>Behavioral Economics; Decision Theory; Political Economy</td>
+                    <td>Combines economic theory and psychology to understand how individuals make decisions with biases</td>
+                    <td>pietro.ortoleva@princeton.edu</td>
+                    <td>Advises Ph.D. students in behavioral and experimental economics; Co-teaches graduate sequence in microeconomic theory</td>
+                    <td>"Complexity and Voting" (2015); "Consistency in Simple vs. Complex Choices" (2019)</td>
+                </tr>
+                <tr>
+                    <td>Henry S. Farber</td>
+                    <td>Princeton University</td>
+                    <td>Labor Economics; Union Studies; Econometrics</td>
+                    <td>A leading labor economist focusing on job loss, union behavior, and taxi drivers' labor supply</td>
+                    <td>farber@princeton.edu</td>
+                    <td>Mentored generations of Princeton Ph.D. students in labor economics; actively advises junior faculty as Emeritus</td>
+                    <td>"Job Loss in the Great Recession" (2015); "Why You Can't Find a Taxi in the Rain" (2015)</td>
+                </tr>
+                <tr>
+                    <td>Swati Bhatt</td>
+                    <td>Princeton University</td>
+                    <td>Technology Economics; Financial Markets; Macroeconomics</td>
+                    <td>Focuses on the impact of digital technology on financial markets and economic activity</td>
+                    <td>sbhatt@princeton.edu</td>
+                    <td>Lectures and mentors undergraduates in economics and finance; served as undergraduate research advisor</td>
+                    <td>Author, Economics of Digitization (2021); "Digital Platforms and Antitrust" (2020)</td>
+                </tr>
+                <tr>
+                    <td>Bo Honoré</td>
+                    <td>Princeton University</td>
+                    <td>Econometrics; Applied Microeconomics</td>
+                    <td>Develops statistical methods for economic data</td>
+                    <td>honore@princeton.edu</td>
+                    <td>Supervised numerous Ph.D. students in econometrics; Co-directs Princeton's Econometrics Research Program</td>
+                    <td>"Moment Conditions for Dynamic Panel Logit Models" (2000); "Identification of Finite Mixture Models" (2020)</td>
+                </tr>
+                <tr>
+                    <td>Ulrich Müller</td>
+                    <td>Princeton University</td>
+                    <td>Econometrics; Economic Theory</td>
+                    <td>Specialist in time-series econometrics and statistical inference</td>
+                    <td>umueller@princeton.edu</td>
+                    <td>Trains graduate students in advanced econometric theory; co-organizer of the econometrics seminar</td>
+                    <td>"Nearly Optimal Tests in Time Series Models" (2015); "Risk of Bayesian Inference in Weakly Identified Models" (2017)</td>
+                </tr>
+                <tr>
+                    <td>Yacine Aït-Sahalia</td>
+                    <td>Princeton University</td>
+                    <td>Financial Econometrics; Asset Pricing; High-Frequency Finance</td>
+                    <td>Develops econometric techniques for analyzing financial markets</td>
+                    <td>yacine@princeton.edu</td>
+                    <td>Mentors Ph.D. students in finance and statistics; Former editor of the Review of Financial Studies</td>
+                    <td>"Nonparametric Estimation of Jump Diffusions" (2004); "High Frequency Data and Volatility" (2005)</td>
+                </tr>
+                <tr>
+                    <td>Jianqing Fan</td>
+                    <td>Princeton University</td>
+                    <td>Financial Econometrics; Machine Learning; Big Data Finance</td>
+                    <td>Prominent statistician and financial economist applying machine learning to risk management and finance</td>
+                    <td>jqfan@princeton.edu</td>
+                    <td>Supervises Ph.D. students in statistics, ORFE, and finance; former chair of Princeton's Statistics department</td>
+                    <td>Statistical Methods for Financial Engineering (2015); "High-Dimensional Covariance Matrices in Portfolio Allocation" (2008)</td>
+                </tr>
+                <tr>
+                    <td>Faruk Gul</td>
+                    <td>Princeton University</td>
+                    <td>Microeconomic Theory; Game Theory</td>
+                    <td>Influential economic theorist known for the Gul-Pesendorfer model of temptation and self-control</td>
+                    <td>fgul@princeton.edu</td>
+                    <td>Has mentored many theory Ph.D. students over decades; Co-taught core micro theory courses</td>
+                    <td>"Temptation and Self-Control" (2001); "Unobservable Investment and the Hold-Up Problem" (1989)</td>
+                </tr>
+                <tr>
+                    <td>Kate Ho</td>
+                    <td>Princeton University</td>
+                    <td>Health Economics; Industrial Organization</td>
+                    <td>Expert on healthcare markets, especially hospital-insurer negotiations and health insurance design</td>
+                    <td>kate.ho@princeton.edu</td>
+                    <td>Co-director of Princeton's Center for Health and Wellbeing; Ph.D. advisor in health economics</td>
+                    <td>"Insurer-Provider Networks in the Medical Care Market" (2019); "The Welfare Effects of Narrow Networks" (2017)</td>
+                </tr>
+                <tr>
+                    <td>Ilyana Kuziemko</td>
+                    <td>Princeton University</td>
+                    <td>Public Economics; Health Economics; Political Economy</td>
+                    <td>Investigates taxation, inequality, and health policy, often using empirical microeconomics</td>
+                    <td>kuziemko@princeton.edu</td>
+                    <td>Co-directs Princeton's Julius-Rabinowitz Center for Public Policy; mentors graduate students in public and health economics</td>
+                    <td>"Redistributive Preferences and Inequality" (2015); "Does Incarceration Reduce Voting? Evidence from Local Jails" (2014)</td>
+                </tr>
+                <tr>
+                    <td>David S. Lee</td>
+                    <td>Princeton University</td>
+                    <td>Labor Economics; Econometric Methods</td>
+                    <td>Known for developing regression discontinuity designs and analyzing labor market institutions</td>
+                    <td>davidlee@princeton.edu</td>
+                    <td>Mentored numerous Ph.D. students; Directed Industrial Relations Section, supervising grad student research fellows</td>
+                    <td>"Regression Discontinuity Designs in Economics" (2010); "International Unions and Wage Dynamics" (2004)</td>
+                </tr>
+                <tr>
+                    <td>Gianluca Violante</td>
+                    <td>Princeton University</td>
+                    <td>Labor Economics; Macroeconomics; Inequality</td>
+                    <td>A leading macro-labor economist examining wage inequality, skill-biased technological change, and macroeconomic labor trends</td>
+                    <td>violante@princeton.edu</td>
+                    <td>Mentors many Ph.D. students in macro and labor; co-organizer of Princeton's macro seminar</td>
+                    <td>"Cyclical Wage Risk" (2019); "Heterogeneous Agents in Macroeconomics" (2018)</td>
+                </tr>
+                <tr>
+                    <td>Marilyn S. Ettinger</td>
+                    <td>New Jersey City University</td>
+                    <td>Corporate Finance; Financial Education; Treasury Management</td>
+                    <td>Experienced finance professor focusing on corporate treasury management and financial analysis</td>
+                    <td>mettinger@njcu.edu</td>
+                    <td>Former department chair; faculty advisor for student investment club</td>
+                    <td>Co-authored finance textbooks; "Integrating Certification Prep in Finance Curriculum" (2018)</td>
+                </tr>
+                <tr>
+                    <td>Andrew Bossie</td>
+                    <td>New Jersey City University</td>
+                    <td>Macroeconomics; Political Economy; Economic History</td>
+                    <td>Researches macroeconomic policy and economic history, including the political economy of public finance</td>
+                    <td>abossie@njcu.edu</td>
+                    <td>Associate Professor mentoring undergraduates in economics research; supervises student capstone projects</td>
+                    <td>"New Deal Fiscal Federalism and Local Economic Activity" (2020)</td>
+                </tr>
+                <tr>
+                    <td>Pablo Garofalo</td>
+                    <td>New Jersey City University</td>
+                    <td>Behavioral Economics; Game Theory; Economic Education</td>
+                    <td>Applies behavioral economics and experimental methods to understand decision-making</td>
+                    <td>pgarofalo@njcu.edu</td>
+                    <td>Mentors undergraduate research and internships; Advisor for NJCU's Fed Challenge team</td>
+                    <td>"Using Classroom Games to Teach Prisoner's Dilemma" (2019)</td>
+                </tr>
+                <tr>
+                    <td>Rubina Vohra</td>
+                    <td>New Jersey City University</td>
+                    <td>Economic Growth; Applied Economics; Development</td>
+                    <td>Her work examines determinants of economic growth and development, including human capital and policy factors</td>
+                    <td>rvohra@njcu.edu</td>
+                    <td>Long-time mentor to NJCU economics majors; active in NJCU honors program advising student theses</td>
+                    <td>"Education and Economic Growth: Evidence from South Asia" (2014)</td>
+                </tr>
+                <tr>
+                    <td>Zhimin Wang</td>
+                    <td>New Jersey City University</td>
+                    <td>Corporate Finance; Investments; International Finance</td>
+                    <td>Researches corporate finance and investment strategies, including valuation methods and financial markets</td>
+                    <td>zwang@njcu.edu</td>
+                    <td>Mentors MBA students in finance capstone projects; supervises the Student Investment Management Group</td>
+                    <td>"Financial Development and Firm Growth in China" (2018)</td>
+                </tr>
+                <tr>
+                    <td>Karen Denning</td>
+                    <td>Fairleigh Dickinson University</td>
+                    <td>Corporate Finance; Investment Banking; Financial Education</td>
+                    <td>Expert in corporate financial management with industry experience</td>
+                    <td>kdenning@fdu.edu</td>
+                    <td>Chair of Finance/Economics department; leads student trips to NYC financial institutions</td>
+                    <td>Co-author of Corporate Finance case studies (2019); "Teaching Finance via Experiential Learning" (2020)</td>
+                </tr>
+                <tr>
+                    <td>Petros Anastasopoulos</td>
+                    <td>Fairleigh Dickinson University</td>
+                    <td>International Economics; Monetary Economics; Applied Micro</td>
+                    <td>Studies exchange rate dynamics and monetary policy in emerging markets</td>
+                    <td>panastas@fdu.edu</td>
+                    <td>Associate Prof. who supervises student research projects in international economics</td>
+                    <td>"Exchange Rate Pass-Through in Developing Economies" (2016); "Inflation and Consumer Spending in Greece" (2019)</td>
+                </tr>
+                <tr>
+                    <td>Sorin Tuluca</td>
+                    <td>Fairleigh Dickinson University</td>
+                    <td>Investment Management; Portfolio Theory; Emerging Markets</td>
+                    <td>Research on portfolio allocation and risk, with focus on emerging market investments</td>
+                    <td>tuluca@fdu.edu</td>
+                    <td>Has mentored many MBA finance students; former director of FDU's student-managed investment fund</td>
+                    <td>"Performance of Socially Responsible Mutual Funds" (2017); "Diversification Benefits in Emerging Markets" (2010)</td>
+                </tr>
+                <tr>
+                    <td>Xiaohui Yang</td>
+                    <td>Fairleigh Dickinson University</td>
+                    <td>Corporate Finance; Mergers & Acquisitions; Banking</td>
+                    <td>Investigates how corporate governance and banking regulations impact firm behavior</td>
+                    <td>xyang@fdu.edu</td>
+                    <td>Advises finance students on research and careers; committee member for DBA dissertations</td>
+                    <td>"Bank Capital Requirements and Loan Growth" (2018); "Cross-Border M&A and Shareholder Wealth" (2015)</td>
+                </tr>
+                <tr>
+                    <td>Ziye (Zoe) Nie</td>
+                    <td>Fairleigh Dickinson University</td>
+                    <td>Asset Pricing; Financial Econometrics; Market Microstructure</td>
+                    <td>Uses econometric methods to study asset pricing and market microstructure</td>
+                    <td>znie@fdu.edu</td>
+                    <td>Guides MS Finance students in quantitative research projects; mentor for Bloomberg trading challenge teams</td>
+                    <td>"Volatility Spillovers in High-Frequency Data" (2021)</td>
+                </tr>
+                <tr>
+                    <td>Tufan Ekici</td>
+                    <td>Ramapo College of NJ</td>
+                    <td>Development Economics; Political Economy; Middle East Economy</td>
+                    <td>Researches economic development and political economy issues, with focus on Turkey and the Middle East</td>
+                    <td>tekici@ramapo.edu</td>
+                    <td>Mentors undergraduate research; faculty advisor for Ramapo's Economics Club</td>
+                    <td>"Political Conflict and Economic Growth: Evidence from Turkey" (2019)</td>
+                </tr>
+                <tr>
+                    <td>George Gonpu</td>
+                    <td>Ramapo College of NJ</td>
+                    <td>Applied Microeconomics; Labor & Urban Economics; Development</td>
+                    <td>Studies urban labor markets and development issues, especially in African contexts</td>
+                    <td>gogonpu@ramapo.edu</td>
+                    <td>Involves undergraduate students in community-based research projects</td>
+                    <td>"Rural-Urban Migration and Employment in Liberia" (2020)</td>
+                </tr>
+                <tr>
+                    <td>Timothy Haase</td>
+                    <td>Ramapo College of NJ</td>
+                    <td>Macroeconomics; Public Finance; Sports Economics</td>
+                    <td>Research spans macroeconomic policy analysis and the economics of sports</td>
+                    <td>thaase@ramapo.edu</td>
+                    <td>Faculty mentor for Ramapo's Fed Challenge team; supervises independent study projects</td>
+                    <td>"Local Economic Impact of Minor League Teams" (2018); "Fiscal Multipliers in Recessions vs. Expansions" (2015)</td>
+                </tr>
+                <tr>
+                    <td>Alexandre Olbrecht</td>
+                    <td>Ramapo College of NJ</td>
+                    <td>Education Economics; Labor Economics; Program Evaluation</td>
+                    <td>Focuses on evaluating educational programs and labor market outcomes</td>
+                    <td>aolbrech@ramapo.edu</td>
+                    <td>Executive Director of the NJ Educational Opportunity Fund consortium</td>
+                    <td>"Merit Scholarships and STEM Persistence" (2017); "Faculty Unions and Student Outcomes" (2016)</td>
+                </tr>
+                <tr>
+                    <td>Xiaoyu Wu</td>
+                    <td>Ramapo College of NJ</td>
+                    <td>International Economics; Development; Applied Econometrics</td>
+                    <td>Applies econometric methods to international trade and development questions</td>
+                    <td>xwu@ramapo.edu</td>
+                    <td>Mentors students on econometric analysis projects; established a peer tutoring program</td>
+                    <td>"Trade Openness and Poverty Reduction: Panel Data Evidence" (2018)</td>
+                </tr>
+                <tr>
+                    <td>Hope Corman</td>
+                    <td>Rider University</td>
+                    <td>Health Economics; Crime and Economics; Public Policy</td>
+                    <td>Pioneered studies on the interplay of economics and health/crime outcomes</td>
+                    <td>corman@rider.edu</td>
+                    <td>Mentored many Rider undergraduates and master's students in economics</td>
+                    <td>"Effects of Welfare Reform on Infant Health" (2005); "Economic Causes of Crime" (2010)</td>
+                </tr>
+                <tr>
+                    <td>Charles McCall</td>
+                    <td>Rider University</td>
+                    <td>Environmental Economics; International Economics; Economic History</td>
+                    <td>Long-time Rider economist researching environmental regulation impacts and historical economic development</td>
+                    <td>cmccall@rider.edu</td>
+                    <td>Over 30 years teaching – mentored countless Rider students</td>
+                    <td>"Economic History of New Jersey's Industrialization" (1998); "Cost-Benefit of Carbon Tax Policies" (2011)</td>
+                </tr>
+                <tr>
+                    <td>Herbert Gishlick</td>
+                    <td>Rider University</td>
+                    <td>Macroeconomics; Economic Education; Finance</td>
+                    <td>Specializes in macroeconomic theory and financial economics</td>
+                    <td>hgishlick@rider.edu</td>
+                    <td>Served as department chair, mentoring junior faculty; faculty advisor for Rider's Economics Club</td>
+                    <td>"Integrating Macroeconomic Simulations in Classroom" (2012)</td>
+                </tr>
+                <tr>
+                    <td>Tjeerd Boonman</td>
+                    <td>Monmouth University</td>
+                    <td>Macroeconomics; International Finance; Monetary Policy</td>
+                    <td>Examines international macroeconomic policy coordination and monetary policy effectiveness</td>
+                    <td>tboonman@monmouth.edu</td>
+                    <td>McMullen Professor mentoring MBA and undergrad research at Monmouth</td>
+                    <td>"ECB Unconventional Policy and Eurozone Stability" (2020); "Monetary Policy Spillovers in the EU" (2018)</td>
+                </tr>
+                <tr>
+                    <td>Jonathan A. Daigle</td>
+                    <td>Monmouth University</td>
+                    <td>Real Estate Finance; Corporate Finance; Teaching Pedagogy</td>
+                    <td>Researches corporate finance and real estate markets, including REIT performance</td>
+                    <td>jdaigle@monmouth.edu</td>
+                    <td>Director of Monmouth's MBA Program – mentors MBA students and oversees capstone projects</td>
+                    <td>"REIT Leverage and Performance in Low-Rate Environments" (2019)</td>
+                </tr>
+                <tr>
+                    <td>Yulin Li</td>
+                    <td>Monmouth University</td>
+                    <td>Corporate Finance; FinTech; Financial Markets</td>
+                    <td>Studies corporate financing decisions and the impact of financial technology on markets</td>
+                    <td>yuli@monmouth.edu</td>
+                    <td>Advises finance majors on research; co-advisor for Monmouth's student investment club</td>
+                    <td>"Crowdfunding and Firm Innovation" (2021); "Blockchain Adoption and Corporate Governance" (2022)</td>
+                </tr>
+                <tr>
+                    <td>Bochen Li</td>
+                    <td>Monmouth University</td>
+                    <td>Behavioral Finance; Investments; Financial Econometrics</td>
+                    <td>Focuses on investor behavior and asset pricing anomalies</td>
+                    <td>bli@monmouth.edu</td>
+                    <td>Mentor for Monmouth's Fed Challenge and CFA Research Challenge student teams</td>
+                    <td>"Investor Overconfidence and Stock Price Volatility" (2020)</td>
+                </tr>
+                <tr>
+                    <td>Yun Luo</td>
+                    <td>Monmouth University</td>
+                    <td>Applied Microeconomics; Labor & Health Economics</td>
+                    <td>Researches labor and health economics issues, including labor market outcomes and public health interventions</td>
+                    <td>yluo@monmouth.edu</td>
+                    <td>Guides economics majors in undergraduate research; involved in Monmouth's urban coast institute research</td>
+                    <td>"Unemployment and Opioid Overdose Rates" (2021); "Job Displacement and Health Insurance Loss" (2019)</td>
+                </tr>
+                <tr>
+                    <td>Steven Pressman</td>
+                    <td>Monmouth University</td>
+                    <td>Poverty & Inequality; Post-Keynesian Economics; Household Finance</td>
+                    <td>A prominent scholar on poverty alleviation and heterodox economics</td>
+                    <td>spressma@monmouth.edu</td>
+                    <td>Former graduate director at Monmouth – mentored countless students and junior faculty</td>
+                    <td>Fifty Major Economists (2013); "The Case for a Basic Income" (2013)</td>
+                </tr>
+                <tr>
+                    <td>Rahi Abouk</td>
+                    <td>William Paterson University</td>
+                    <td>Health Economics; Public Policy; Applied Microeconomics</td>
+                    <td>Empirical researcher on public health policies and their economic impacts</td>
+                    <td>aboukr@wpunj.edu</td>
+                    <td>Assistant professor mentoring undergrads in econometrics projects</td>
+                    <td>"Texting-While-Driving Laws and Traffic Fatalities" (2019); "Recreational Marijuana Laws and Adolescent Use" (2018)</td>
+                </tr>
+                <tr>
+                    <td>Giuliana Campanelli Andreopoulos</td>
+                    <td>William Paterson University</td>
+                    <td>Development Economics; Gender Economics; Economics Education</td>
+                    <td>Research on economic development issues with a focus on gender</td>
+                    <td>andreopoulosg@wpunj.edu</td>
+                    <td>Long-serving professor who has supervised many student teachers in economics</td>
+                    <td>"Microfinance and Women's Empowerment in Bangladesh" (2017); "Active Learning in Development Economics" (2014)</td>
+                </tr>
+                <tr>
+                    <td>Fuchun Cai</td>
+                    <td>William Paterson University</td>
+                    <td>Financial Economics; Econometrics; Chinese Economy</td>
+                    <td>Specializes in financial markets and econometric modeling</td>
+                    <td>caif@wpunj.edu</td>
+                    <td>Faculty advisor for WPUNJ Finance Club; mentors students on econometric forecasting projects</td>
+                    <td>"Stock Market Integration and Volatility Spillovers: China and the World" (2016)</td>
+                </tr>
+                <tr>
+                    <td>John Malindretos</td>
+                    <td>William Paterson University</td>
+                    <td>Finance; Investments; Market Efficiency</td>
+                    <td>Research in investments and stock market efficiency</td>
+                    <td>malindretosj@wpunj.edu</td>
+                    <td>Department Chair leading faculty development; mentors junior faculty and oversees curriculum</td>
+                    <td>"Mutual Fund Performance Persistence" (2008); "Technical Analysis Effectiveness in Emerging Markets" (2015)</td>
+                </tr>
+                <tr>
+                    <td>Priya Nagaraj</td>
+                    <td>William Paterson University</td>
+                    <td>International Development; Health Economics; Applied Micro</td>
+                    <td>Focuses on development and health economics, particularly the impact of public health interventions</td>
+                    <td>nagarajp1@wpunj.edu</td>
+                    <td>Mentors undergraduate research projects on global health</td>
+                    <td>"Impact of Vaccination Drives on Child Health in India" (2019)</td>
+                </tr>
+                <tr>
+                    <td>Alexandros Panayides</td>
+                    <td>William Paterson University</td>
+                    <td>Corporate Finance; Derivatives; Financial Markets</td>
+                    <td>Research on derivatives pricing and corporate risk management</td>
+                    <td>panayidesa@wpunj.edu</td>
+                    <td>Department chair for many years; supervised numerous student research projects</td>
+                    <td>"Option Market Efficiency and Share Price Reaction" (2016); "Teaching Derivatives through Simulations" (2013)</td>
+                </tr>
+                <tr>
+                    <td>Siamack Shojai</td>
+                    <td>William Paterson University</td>
+                    <td>Macroeconomics; Energy Economics; Middle East Economy</td>
+                    <td>Senior economist with work on oil markets and macroeconomic policy in oil-exporting countries</td>
+                    <td>shojais@wpunj.edu</td>
+                    <td>Former dean and long-time mentor to faculty and students</td>
+                    <td>The Iranian Economy in the Twentieth Century (2015); OPEC and the World Oil Market (1995)</td>
+                </tr>
+                <tr>
+                    <td>Tricia Snyder</td>
+                    <td>William Paterson University</td>
+                    <td>Macroeconomics; Monetary Economics; Public Finance</td>
+                    <td>Experienced educator specializing in macroeconomic theory and monetary policy</td>
+                    <td>snydert@wpunj.edu</td>
+                    <td>Over 20 years mentoring students at WPUNJ; faculty advisor for Omicron Delta Epsilon honor society</td>
+                    <td>"Public Debt and Interest Rates: Historical Evidence" (2010); "Innovations in Teaching Principles of Econ" (2018)</td>
+                </tr>
+                <tr>
+                    <td>Demetri Tsanacas</td>
+                    <td>William Paterson University</td>
+                    <td>International Business; Entrepreneurship; Trade Policy</td>
+                    <td>Research spans international business strategy and trade economics</td>
+                    <td>tsanacasd@wpunj.edu</td>
+                    <td>Mentors students in WPUNJ's Small Business Development Center internships</td>
+                    <td>"NAFTA and Small Business Exports" (2016); co-author of International Business Strategy casebook (2014)</td>
+                </tr>
+                <tr>
+                    <td>Lawrence Verzani</td>
+                    <td>William Paterson University</td>
+                    <td>Quantitative Finance; Risk Management; Financial Modeling</td>
+                    <td>Focuses on quantitative techniques for risk management and valuation</td>
+                    <td>verzanil@wpunj.edu</td>
+                    <td>Developed and leads WPUNJ's Bloomberg Finance Lab training</td>
+                    <td>Author of custom Financial Modeling workbook (2019); "Value-at-Risk Models for Bond Portfolios" (2015)</td>
+                </tr>
+                <tr>
+                    <td>Chuanqian Zhang</td>
+                    <td>William Paterson University</td>
+                    <td>Financial Economics; Corporate Valuation; China's Economy</td>
+                    <td>Researches corporate finance topics, including dynamic valuation of securities and capital structure</td>
+                    <td>zhangc4@wpunj.edu</td>
+                    <td>Joined WPUNJ in 2015; supervises student research assistants on corporate finance data projects</td>
+                    <td>"Corporate Bond Valuation with Structural Models" (2018); "China's Stock Market Reform and Firm Value" (2020)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            const searchText = this.value.toLowerCase();
+            const universityFilter = document.getElementById('universityFilter').value;
+            const rows = document.querySelectorAll('.professors-table tbody tr');
+            
+            rows.forEach(row => {
+                const name = row.cells[0].textContent.toLowerCase();
+                const university = row.cells[1].textContent.toLowerCase();
+                const interests = row.cells[2].textContent.toLowerCase();
+                const focus = row.cells[3].textContent.toLowerCase();
+                
+                const matchesSearch = name.includes(searchText) || 
+                                    university.includes(searchText) || 
+                                    interests.includes(searchText) || 
+                                    focus.includes(searchText);
+                
+                const matchesUniversity = !universityFilter || university.includes(universityFilter.toLowerCase());
+                
+                row.style.display = matchesSearch && matchesUniversity ? '' : 'none';
+            });
+        });
+
+        // University filter functionality
+        document.getElementById('universityFilter').addEventListener('change', function() {
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            const universityFilter = this.value;
+            const rows = document.querySelectorAll('.professors-table tbody tr');
+            
+            rows.forEach(row => {
+                const name = row.cells[0].textContent.toLowerCase();
+                const university = row.cells[1].textContent.toLowerCase();
+                const interests = row.cells[2].textContent.toLowerCase();
+                const focus = row.cells[3].textContent.toLowerCase();
+                
+                const matchesSearch = name.includes(searchText) || 
+                                    university.includes(searchText) || 
+                                    interests.includes(searchText) || 
+                                    focus.includes(searchText);
+                
+                const matchesUniversity = !universityFilter || university.includes(universityFilter.toLowerCase());
+                
+                row.style.display = matchesSearch && matchesUniversity ? '' : 'none';
+            });
+        });
+    </script>
+</body>
+</html> 
