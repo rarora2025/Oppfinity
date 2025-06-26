@@ -118,16 +118,40 @@ document.addEventListener('DOMContentLoaded', function() {
         // Show loading state
         submitBtn.disabled = true;
         submitBtn.classList.add('loading');
-        submitBtn.textContent = 'Sending...';
+        submitBtn.textContent = 'Sending reset link...';
         
         try {
             await window.authManager.resetPassword(email);
-            // Show success message and redirect back to login
+            
+            // Show success message
+            const messageDiv = document.getElementById('authMessage');
+            if (messageDiv) {
+                messageDiv.textContent = 'Password reset email sent! Check your inbox for the reset link.';
+                messageDiv.className = 'auth-message success';
+                messageDiv.style.display = 'block';
+            }
+            
+            // Clear the form
+            document.getElementById('resetEmail').value = '';
+            
+            // Redirect back to login after 3 seconds
             setTimeout(() => {
                 showForm(loginForm);
-            }, 2000);
+                if (messageDiv) {
+                    messageDiv.style.display = 'none';
+                }
+            }, 3000);
+            
         } catch (error) {
             console.error('Password reset error:', error);
+            
+            // Show error message
+            const messageDiv = document.getElementById('authMessage');
+            if (messageDiv) {
+                messageDiv.textContent = error.message || 'Failed to send reset email. Please try again.';
+                messageDiv.className = 'auth-message error';
+                messageDiv.style.display = 'block';
+            }
         } finally {
             // Reset button state
             submitBtn.disabled = false;

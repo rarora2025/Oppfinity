@@ -80,6 +80,23 @@ images.forEach(img => {
 
 // Form interactions
 document.addEventListener('DOMContentLoaded', function() {
+    // Handle URL hash fragments for dashboard navigation
+    if (window.location.hash === '#userDashboard') {
+        setTimeout(() => {
+            const dashboard = document.getElementById('userDashboard');
+            if (dashboard) {
+                // First scroll to the dashboard section
+                dashboard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                
+                // Then adjust the position after a short delay to account for navbar
+                setTimeout(() => {
+                    const navbarHeight = 80;
+                    window.scrollBy({ top: -navbarHeight - 20, behavior: 'smooth' });
+                }, 300);
+            }
+        }, 1000); // Wait for auth state to be determined
+    }
+
     const form = document.getElementById('contactForm');
     const formMessage = document.getElementById('formMessage');
 
@@ -194,6 +211,25 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 150);
         });
     });
+
+    // Add dashboard navigation link handler
+    const dashboardNavLink = document.querySelector('.dashboard-nav-link');
+    if (dashboardNavLink) {
+        dashboardNavLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            const dashboard = document.getElementById('userDashboard');
+            if (dashboard) {
+                // First scroll to the dashboard section
+                dashboard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                
+                // Then adjust the position after a short delay to account for navbar
+                setTimeout(() => {
+                    const navbarHeight = 80;
+                    window.scrollBy({ top: -navbarHeight - 20, behavior: 'smooth' });
+                }, 300);
+            }
+        });
+    }
 
     // Add typing effect to hero title
     const heroTitle = document.querySelector('.hero-content h1');

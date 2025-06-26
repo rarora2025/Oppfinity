@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Test</title>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+    <h1>Firebase Authentication Test</h1>
+    <input type="email" id="testEmail" placeholder="Enter email to test" style="padding: 10px; margin: 10px;">
+    <button onclick="testPasswordReset()" style="padding: 10px; margin: 10px;">Test Password Reset</button>
+    <div id="result" style="margin: 20px; padding: 10px; border: 1px solid #ccc;"></div>
+
+    <script src="firebase-config.js"></script>
+    <script>
+        async function testPasswordReset() {
+            const email = document.getElementById('testEmail').value;
+            const resultDiv = document.getElementById('result');
+            
+            if (!email) {
+                resultDiv.innerHTML = '<p style="color: red;">Please enter an email address</p>';
+                return;
+            }
+            
+            resultDiv.innerHTML = '<p style="color: blue;">Testing password reset...</p>';
+            
+            try {
+                console.log('Testing password reset for:', email);
+                await firebase.auth().sendPasswordResetEmail(email);
+                console.log('Password reset email sent successfully');
+                resultDiv.innerHTML = '<p style="color: green;">✅ Password reset email sent successfully! Check your inbox and spam folder.</p>';
+            } catch (error) {
+                console.error('Password reset error:', error);
+                resultDiv.innerHTML = `<p style="color: red;">❌ Error: ${error.message}</p><p>Error code: ${error.code}</p>`;
+            }
+        }
+    </script>
+</body>
+</html> 

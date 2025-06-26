@@ -401,4 +401,78 @@
 
 .logo-img:hover {
     transform: scale(1.05);
+}
+
+/* Forgot Password Form Specific Styles */
+#forgotPasswordForm {
+    text-align: center;
+}
+
+#forgotPasswordForm p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+#forgotPasswordForm .form-group input {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+#forgotPasswordForm .form-group input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+#forgotPasswordForm .form-group input:focus {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: #00d4ff;
+    color: white;
+}
+
+#forgotPasswordForm .auth-btn {
+    background: linear-gradient(45deg, #00d4ff, #0099cc);
+    color: white;
+    font-weight: 600;
+}
+
+#forgotPasswordForm .auth-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(0, 212, 255, 0.4);
+}
+
+#forgotPasswordForm .auth-links a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+#forgotPasswordForm .auth-links a:hover {
+    color: #00d4ff;
+    text-decoration: underline;
+}
+
+/* Success message for password reset */
+.auth-message.success {
+    background: rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+    padding: 1rem;
+    border-radius: 15px;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+.auth-message.error {
+    background: rgba(231, 76, 60, 0.2);
+    color: #e74c3c;
+    border: 1px solid rgba(231, 76, 60, 0.3);
+    padding: 1rem;
+    border-radius: 15px;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+    text-align: center;
 } 

@@ -24,6 +24,26 @@ class AuthManager {
         this.updateUIForSignedInUser(user);
         this.showUserProfile(user);
         this.showDashboard(user);
+        
+        // Automatically redirect to main page (index.html) if we're on auth.html
+        if (window.location.pathname.includes('auth.html')) {
+            window.location.href = 'index.html#userDashboard';
+        } else {
+            // If already on index.html, scroll to dashboard after a short delay
+            setTimeout(() => {
+                const dashboard = document.getElementById('userDashboard');
+                if (dashboard) {
+                    // First scroll to the dashboard section
+                    dashboard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    
+                    // Then adjust the position after a short delay to account for navbar
+                    setTimeout(() => {
+                        const navbarHeight = 80;
+                        window.scrollBy({ top: -navbarHeight - 20, behavior: 'smooth' });
+                    }, 300);
+                }
+            }, 500);
+        }
     }
 
     // User signed out
@@ -38,10 +58,12 @@ class AuthManager {
     updateUIForSignedInUser(user) {
         const authNavBtn = document.getElementById('authNavBtn');
         const userNavProfile = document.getElementById('userNavProfile');
+        const dashboardNavLink = document.getElementById('dashboardNavLink');
         const authContainer = document.getElementById('authContainer');
         const userProfile = document.getElementById('userProfile');
         
         if (authNavBtn) authNavBtn.style.display = 'none';
+        if (dashboardNavLink) dashboardNavLink.style.display = 'inline-block';
         if (userNavProfile) {
             userNavProfile.style.display = 'flex';
             const userNameDisplay = userNavProfile.querySelector('.user-name-display');
@@ -71,10 +93,12 @@ class AuthManager {
     updateUIForSignedOutUser() {
         const authNavBtn = document.getElementById('authNavBtn');
         const userNavProfile = document.getElementById('userNavProfile');
+        const dashboardNavLink = document.getElementById('dashboardNavLink');
         const authContainer = document.getElementById('authContainer');
         const userProfile = document.getElementById('userProfile');
         
         if (authNavBtn) authNavBtn.style.display = 'inline-block';
+        if (dashboardNavLink) dashboardNavLink.style.display = 'none';
         if (userNavProfile) userNavProfile.style.display = 'none';
         if (authContainer) authContainer.style.display = 'block';
         if (userProfile) userProfile.style.display = 'none';
@@ -103,6 +127,7 @@ class AuthManager {
             dashboard.style.display = 'block';
             this.updateDashboardInfo(user);
             this.loadUserProfile();
+            this.setupRealtimeProfileCompletion();
         }
     }
 
@@ -151,7 +176,6 @@ class AuthManager {
             if (doc.exists) {
                 const profile = doc.data();
                 this.populateProfileForm(profile);
-                this.updateProfileCompletion(profile);
                 if (profile.profilePhoto) {
                     this.displayProfilePhoto(profile.profilePhoto);
                 }
@@ -163,19 +187,29 @@ class AuthManager {
 
     // Populate profile form
     populateProfileForm(profile) {
-        const fields = ['fieldOfInterest', 'location', 'dateOfBirth', 'schoolName', 'researchInterests'];
+        const fields = ['fieldOfInterest', 'dateOfBirth', 'schoolName', 'researchInterests'];
         fields.forEach(field => {
             const element = document.getElementById(field);
             if (element && profile[field]) {
                 element.value = profile[field];
             }
         });
+        
+        // Handle resume file if it exists (only show file name)
+        if (profile.resumeFile && profile.resumeFile.name) {
+            this.displayResumeFileInfo({
+                name: profile.resumeFile.name,
+                size: null
+            });
+        }
+        
+        this.setupRealtimeProfileCompletion();
     }
 
     // Update profile completion percentage
     updateProfileCompletion(profile) {
-        const requiredFields = ['fieldOfInterest', 'location', 'dateOfBirth', 'schoolName'];
-        const optionalFields = ['researchInterests'];
+        const requiredFields = ['fieldOfInterest', 'dateOfBirth', 'schoolName'];
+        const optionalFields = ['researchInterests', 'resumeFile'];
         
         let completed = 0;
         let total = requiredFields.length + (optionalFields.length * 0.5); // Optional fields count as half
@@ -187,7 +221,7 @@ class AuthManager {
         });
         
         optionalFields.forEach(field => {
-            if (profile[field] && profile[field].trim() !== '') {
+            if (profile[field] && (typeof profile[field] === 'string' ? profile[field].trim() !== '' : true)) {
                 completed += 0.5;
             }
         });
@@ -226,7 +260,6 @@ class AuthManager {
                 updatedAt: new Date()
             }, { merge: true });
 
-            this.updateProfileCompletion(profileData);
             this.showSuccessMessage('Profile saved to Firebase!');
         } catch (error) {
             console.error('Error saving profile:', error);
@@ -291,10 +324,40 @@ class AuthManager {
     // Reset password
     async resetPassword(email) {
         try {
+            console.log('Attempting to send password reset email to:', email);
+            
+            // Validate email format
+            if (!email || !email.includes('@')) {
+                throw new Error('Please enter a valid email address.');
+            }
+            
             await this.auth.sendPasswordResetEmail(email);
-            this.showSuccessMessage('Password reset email sent!');
+            console.log('Password reset email sent successfully');
+            this.showSuccessMessage('Password reset email sent! Check your inbox and spam folder.');
         } catch (error) {
-            this.showErrorMessage(this.getErrorMessage(error));
+            console.error('Password reset error:', error);
+            
+            // Provide more specific error messages
+            let errorMessage = 'Failed to send reset email. ';
+            
+            switch (error.code) {
+                case 'auth/user-not-found':
+                    errorMessage = 'No account found with this email address.';
+                    break;
+                case 'auth/invalid-email':
+                    errorMessage = 'Please enter a valid email address.';
+                    break;
+                case 'auth/too-many-requests':
+                    errorMessage = 'Too many attempts. Please wait a few minutes and try again.';
+                    break;
+                case 'auth/network-request-failed':
+                    errorMessage = 'Network error. Please check your internet connection.';
+                    break;
+                default:
+                    errorMessage += error.message || 'Please try again later.';
+            }
+            
+            this.showErrorMessage(errorMessage);
             throw error;
         }
     }
@@ -359,34 +422,28 @@ class AuthManager {
 
     // Setup profile photo handlers
     setupProfilePhotoHandlers() {
-        // Auth page profile photo
-        const profilePhotoInput = document.getElementById('profilePhotoInput');
-        const profileAvatar = document.getElementById('profileAvatar');
+        // Profile photo upload handlers
+        const profilePhotoInputs = ['profilePhotoInput', 'dashboardProfilePhotoInput'];
         
-        if (profilePhotoInput && profileAvatar) {
-            profileAvatar.addEventListener('click', () => {
-                profilePhotoInput.click();
-            });
+        profilePhotoInputs.forEach(inputId => {
+            const input = document.getElementById(inputId);
+            const avatar = document.getElementById(inputId.replace('Input', ''));
+            const initial = document.getElementById(inputId.replace('PhotoInput', 'UserInitial'));
             
-            profilePhotoInput.addEventListener('change', (e) => {
-                this.handleProfilePhotoUpload(e, 'profilePhoto', 'avatarInitial');
-            });
-        }
-        
-        // Dashboard profile photo
-        const dashboardProfilePhotoInput = document.getElementById('dashboardProfilePhotoInput');
-        const dashboardProfileAvatar = document.getElementById('dashboardProfileAvatar');
-        
-        if (dashboardProfilePhotoInput && dashboardProfileAvatar) {
-            dashboardProfileAvatar.addEventListener('click', () => {
-                dashboardProfilePhotoInput.click();
-            });
-            
-            dashboardProfilePhotoInput.addEventListener('change', (e) => {
-                this.handleProfilePhotoUpload(e, 'dashboardProfilePhoto', 'dashboardUserInitial');
-            });
-        }
-        
+            if (input && avatar) {
+                input.addEventListener('change', (event) => {
+                    this.handleProfilePhotoUpload(event, avatar.id, initial ? initial.id : null);
+                });
+                
+                avatar.addEventListener('click', () => {
+                    input.click();
+                });
+            }
+        });
+
+        // Resume upload handlers
+        this.setupResumeUploadHandlers();
+
         // Profile form save handler
         const userProfileForm = document.getElementById('userProfileForm');
         if (userProfileForm) {
@@ -395,6 +452,155 @@ class AuthManager {
                 this.handleProfileSave();
             });
         }
+    }
+
+    setupResumeUploadHandlers() {
+        const resumeUpload = document.getElementById('resumeUpload');
+        const resumeUploadArea = document.getElementById('resumeUploadArea');
+        const resumeFileInfo = document.getElementById('resumeFileInfo');
+        const removeResumeBtn = document.getElementById('removeResumeBtn');
+
+        if (resumeUpload && resumeUploadArea) {
+            // Click to upload
+            resumeUploadArea.addEventListener('click', () => {
+                resumeUpload.click();
+            });
+
+            // File selection
+            resumeUpload.addEventListener('change', (event) => {
+                this.handleResumeUpload(event);
+            });
+
+            // Drag and drop
+            resumeUploadArea.addEventListener('dragover', (event) => {
+                event.preventDefault();
+                resumeUploadArea.classList.add('dragover');
+            });
+
+            resumeUploadArea.addEventListener('dragleave', (event) => {
+                event.preventDefault();
+                resumeUploadArea.classList.remove('dragover');
+            });
+
+            resumeUploadArea.addEventListener('drop', (event) => {
+                event.preventDefault();
+                resumeUploadArea.classList.remove('dragover');
+                
+                const files = event.dataTransfer.files;
+                if (files.length > 0) {
+                    resumeUpload.files = files;
+                    this.handleResumeUpload({ target: resumeUpload });
+                }
+            });
+
+            // Remove file
+            if (removeResumeBtn) {
+                removeResumeBtn.addEventListener('click', () => {
+                    this.removeResumeFile();
+                });
+            }
+        }
+    }
+
+    handleResumeUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        // Validate file type
+        const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+        if (!allowedTypes.includes(file.type)) {
+            this.showErrorMessage('Please upload a PDF, DOC, or DOCX file.');
+            return;
+        }
+
+        // Validate file size (5MB limit)
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        if (file.size > maxSize) {
+            this.showErrorMessage('File size must be less than 5MB.');
+            return;
+        }
+
+        // Display file info
+        this.displayResumeFileInfo(file);
+    }
+
+    displayResumeFileInfo(file) {
+        const resumeUploadArea = document.getElementById('resumeUploadArea');
+        const resumeFileInfo = document.getElementById('resumeFileInfo');
+        const resumeFileName = document.getElementById('resumeFileName');
+        const resumeFileSize = document.getElementById('resumeFileSize');
+
+        if (resumeUploadArea && resumeFileInfo && resumeFileName && resumeFileSize) {
+            resumeUploadArea.style.display = 'none';
+            resumeFileInfo.style.display = 'flex';
+            
+            resumeFileName.textContent = file.name;
+            resumeFileSize.textContent = file.size ? this.formatFileSize(file.size) : '';
+        }
+    }
+
+    removeResumeFile() {
+        const resumeUpload = document.getElementById('resumeUpload');
+        const resumeUploadArea = document.getElementById('resumeUploadArea');
+        const resumeFileInfo = document.getElementById('resumeFileInfo');
+
+        if (resumeUpload && resumeUploadArea && resumeFileInfo) {
+            resumeUpload.value = '';
+            resumeUploadArea.style.display = 'block';
+            resumeFileInfo.style.display = 'none';
+            
+            // Save the updated profile (without resume) to Firebase
+            this.saveUpdatedProfileWithoutResume();
+        }
+    }
+
+    // Helper method to save profile without resume
+    async saveUpdatedProfileWithoutResume() {
+        const user = this.auth.currentUser;
+        if (!user) return;
+
+        try {
+            // Get profile photo from DOM (if any)
+            let profilePhoto = '';
+            const dashboardPhoto = document.getElementById('dashboardProfilePhoto');
+            if (dashboardPhoto && dashboardPhoto.src && dashboardPhoto.style.display !== 'none') {
+                profilePhoto = dashboardPhoto.src;
+            } else {
+                const authPhoto = document.getElementById('profilePhoto');
+                if (authPhoto && authPhoto.src && authPhoto.style.display !== 'none') {
+                    profilePhoto = authPhoto.src;
+                }
+            }
+
+            // Collect current form data
+            const profileData = {
+                fieldOfInterest: document.getElementById('fieldOfInterest').value,
+                dateOfBirth: document.getElementById('dateOfBirth').value,
+                schoolName: document.getElementById('schoolName').value,
+                researchInterests: document.getElementById('researchInterests').value,
+                profilePhoto: profilePhoto,
+                email: user.email,
+                displayName: user.displayName || user.email.split('@')[0],
+                updatedAt: new Date(),
+                resumeFile: null // Explicitly set to null to remove it
+            };
+            
+            // Save to Firebase with explicit resumeFile removal
+            await window.db.collection('users').doc(user.uid).set(profileData, { merge: true });
+            
+            this.showSuccessMessage('Resume removed successfully!');
+        } catch (error) {
+            console.error('Error removing resume:', error);
+            this.showErrorMessage('Failed to remove resume. Please try again.');
+        }
+    }
+
+    formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 
     // Handle profile photo upload
@@ -453,13 +659,21 @@ class AuthManager {
             // Collect form data
             const profileData = {
                 fieldOfInterest: document.getElementById('fieldOfInterest').value,
-                location: document.getElementById('location').value,
                 dateOfBirth: document.getElementById('dateOfBirth').value,
                 schoolName: document.getElementById('schoolName').value,
                 researchInterests: document.getElementById('researchInterests').value
             };
             
-            // Save profile
+            // Handle resume file if uploaded (only save file name)
+            const resumeUpload = document.getElementById('resumeUpload');
+            if (resumeUpload && resumeUpload.files.length > 0) {
+                const file = resumeUpload.files[0];
+                profileData.resumeFile = {
+                    name: file.name
+                };
+            }
+            
+            // Save profile (with or without resume)
             await this.saveUserProfile(profileData);
             
             // Show success state
@@ -511,29 +725,48 @@ class AuthManager {
             dashboardInitial.style.display = 'none';
         }
     }
+
+    // Add this after populateProfileForm
+    setupRealtimeProfileCompletion() {
+        const requiredFields = ['fieldOfInterest', 'dateOfBirth', 'schoolName'];
+        const update = () => {
+            let completed = 0;
+            requiredFields.forEach(field => {
+                const el = document.getElementById(field);
+                if (el && el.value && el.value.trim() !== '') completed++;
+            });
+            const percent = Math.round((completed / requiredFields.length) * 100);
+            this.updateCircularProgress(percent);
+        };
+        requiredFields.forEach(field => {
+            const el = document.getElementById(field);
+            if (el) el.addEventListener('input', update);
+        });
+        update(); // Initial call
+    }
+
+    updateCircularProgress(percent) {
+        const circle = document.querySelector('.circular-progress-bar');
+        const text = document.getElementById('profileCompletion');
+        // Get the actual radius from the SVG element
+        let radius = 54;
+        if (circle) {
+            const r = circle.getAttribute('r');
+            if (r) radius = parseFloat(r);
+        }
+        const circumference = 2 * Math.PI * radius;
+        const offset = circumference - (percent / 100) * circumference;
+        if (circle) {
+            circle.style.strokeDasharray = `${circumference}`;
+            circle.style.strokeDashoffset = offset;
+        }
+        if (text) text.textContent = percent + '%';
+    }
 }
 
 // Initialize auth manager when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     window.authManager = new AuthManager();
-    
-    // Setup profile form submission
-    const profileForm = document.getElementById('userProfileForm');
-    if (profileForm) {
-        profileForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const profileData = {
-                fieldOfInterest: document.getElementById('fieldOfInterest').value,
-                location: document.getElementById('location').value,
-                dateOfBirth: document.getElementById('dateOfBirth').value,
-                schoolName: document.getElementById('schoolName').value,
-                researchInterests: document.getElementById('researchInterests').value
-            };
-            
-            await window.authManager.saveUserProfile(profileData);
-        });
-    }
     
     // Setup navigation sign out button
     const signOutNavBtn = document.getElementById('signOutNavBtn');
