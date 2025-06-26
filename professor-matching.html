@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match with Professors - Oppfinity</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="opp-logo.png" alt="Oppfinity Logo" class="logo-img">
+            <h1>Oppfinity</h1>
+        </div>
+        <div class="nav-links">
+            <a href="index.html#userDashboard">Back to Dashboard</a>
+        </div>
+    </nav>
+
+    <section class="professor-matching-hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="animate__animated animate__fadeInDown">🎯 Match with Professors</h1>
+                <p class="animate__animated animate__fadeInUp">Your profile is complete! Let's find the perfect research opportunities for you.</p>
+                
+                <div class="matching-status">
+                    <div class="status-card">
+                        <div class="status-icon">✅</div>
+                        <h3>Profile Complete</h3>
+                        <p>Your profile is 100% ready for matching</p>
+                    </div>
+                </div>
+
+                <div class="matching-options">
+                    <div class="option-card">
+                        <div class="option-icon">🔍</div>
+                        <h3>AI-Powered Matching</h3>
+                        <p>Our AI analyzes your interests and finds professors who match your research goals</p>
+                        <ul>
+                            <li>Personalized recommendations</li>
+                            <li>Research interest alignment</li>
+                            <li>Geographic preferences</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="option-card">
+                        <div class="option-icon">📧</div>
+                        <h3>Smart Email Outreach</h3>
+                        <p>We craft personalized emails that get responses</p>
+                        <ul>
+                            <li>AI-generated content</li>
+                            <li>Professor-specific customization</li>
+                            <li>High response rates</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="option-card">
+                        <div class="option-icon">📊</div>
+                        <h3>Track Your Success</h3>
+                        <p>Monitor your outreach and responses in real-time</p>
+                        <ul>
+                            <li>Response tracking</li>
+                            <li>Analytics dashboard</li>
+                            <li>Success metrics</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="cta-section">
+                    <button id="startMatchingBtn" class="start-matching-btn animate__animated animate__pulse animate__infinite">
+                        <span class="btn-text">Start Matching Now</span>
+                        <span class="btn-icon">🚀</span>
+                    </button>
+                    <p class="cta-subtitle">Join 1,200+ students who found their research opportunities</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="matching-stats">
+        <div class="container">
+            <h2>Why Students Choose Oppfinity</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">89%</div>
+                    <div class="stat-label">Average Response Rate</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Professors Connected</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">2.3</div>
+                    <div class="stat-label">Avg. Responses per Student</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">7</div>
+                    <div class="stat-label">Days to First Response</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="success-stories">
+        <div class="container">
+            <h2 class="gradient-text">Student Success Stories</h2>
+            <div class="stories-grid">
+                <div class="story-card">
+                    <div class="story-content">
+                        <p>"Oppfinity helped me connect with a Harvard professor for my computer science research. The AI-powered email targeting was incredibly effective!"</p>
+                    </div>
+                    <div class="story-author">
+                        <div class="author-avatar">👨‍🎓</div>
+                        <div class="author-info">
+                            <div class="author-name">Alex Chen</div>
+                            <div class="author-school">Harvard University Research Intern</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="story-card">
+                    <div class="story-content">
+                        <p>"Within a week of using Oppfinity, I received responses from 3 MIT professors interested in my robotics project. Game changer!"</p>
+                    </div>
+                    <div class="story-author">
+                        <div class="author-avatar">👩‍🔬</div>
+                        <div class="author-info">
+                            <div class="author-name">Sarah Johnson</div>
+                            <div class="author-school">MIT Research Assistant</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="story-card">
+                    <div class="story-content">
+                        <p>"The personalized email approach made all the difference. I'm now working on cutting-edge biology research at Stanford!"</p>
+                    </div>
+                    <div class="story-author">
+                        <div class="author-avatar">🧬</div>
+                        <div class="author-info">
+                            <div class="author-name">Michael Rodriguez</div>
+                            <div class="author-school">Stanford Research Fellow</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Oppfinity</h3>
+                <p>Connecting students with research opportunities</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <a href="index.html">Dashboard</a>
+                <a href="index.html#how-it-works">How It Works</a>
+                <a href="index.html#about-us">About Us</a>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p>Email: rarora2025@gmail.com</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Oppfinity. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        // Check if user is authenticated
+        document.addEventListener('DOMContentLoaded', function() {
+            const auth = new Auth();
+            
+            // Check authentication status
+            auth.auth.onAuthStateChanged(function(user) {
+                if (!user) {
+                    // Redirect to login if not authenticated
+                    window.location.href = 'auth.html';
+                }
+            });
+
+            // Add click handler for start matching button
+            document.getElementById('startMatchingBtn').addEventListener('click', function() {
+                // For now, show a coming soon message
+                alert('Professor matching feature coming soon! This will connect you with professors based on your profile.');
+            });
+        });
+    </script>
+</body>
+</html> 

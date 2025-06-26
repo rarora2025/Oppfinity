@@ -1,64 +1,75 @@
-// Auth UI Interactions
-document.addEventListener('DOMContentLoaded', function() {
-    // Get DOM elements
+// Wait for authManager to be available
+function waitForAuthManager() {
+    if (window.authManager) {
+        setupAuthUI();
+    } else {
+        setTimeout(waitForAuthManager, 100);
+    }
+}
+
+// Setup auth UI when authManager is available
+function setupAuthUI() {
+    // Get form elements
     const loginForm = document.getElementById('loginForm');
     const signupForm = document.getElementById('signupForm');
     const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+    const userProfile = document.getElementById('userProfile');
     
+    // Get form elements
+    const loginFormElement = document.getElementById('loginFormElement');
+    const signupFormElement = document.getElementById('signupFormElement');
+    const forgotPasswordFormElement = document.getElementById('forgotPasswordFormElement');
+    
+    // Get buttons
+    const googleSignInBtn = document.getElementById('googleSignInBtn');
+    const googleSignUpBtn = document.getElementById('googleSignUpBtn');
+    const signOutBtn = document.getElementById('signOutBtn');
+    
+    // Get links
     const showSignupLink = document.getElementById('showSignupLink');
     const showLoginLink = document.getElementById('showLoginLink');
     const forgotPasswordLink = document.getElementById('forgotPasswordLink');
     const backToLoginLink = document.getElementById('backToLoginLink');
     
-    const loginFormElement = document.getElementById('loginFormElement');
-    const signupFormElement = document.getElementById('signupFormElement');
-    const forgotPasswordFormElement = document.getElementById('forgotPasswordFormElement');
-    
-    const googleSignInBtn = document.getElementById('googleSignInBtn');
-    const googleSignUpBtn = document.getElementById('googleSignUpBtn');
-    const signOutBtn = document.getElementById('signOutBtn');
-
     // Form switching functions
     function showForm(formToShow) {
         // Hide all forms
         loginForm.style.display = 'none';
         signupForm.style.display = 'none';
         forgotPasswordForm.style.display = 'none';
+        userProfile.style.display = 'none';
         
         // Show the requested form
         formToShow.style.display = 'block';
         
-        // Add animation
-        formToShow.style.opacity = '0';
-        formToShow.style.transform = 'translateY(20px)';
-        setTimeout(() => {
-            formToShow.style.transition = 'all 0.3s ease';
-            formToShow.style.opacity = '1';
-            formToShow.style.transform = 'translateY(0)';
-        }, 10);
+        // Clear any messages
+        const messageDiv = document.getElementById('authMessage');
+        if (messageDiv) {
+            messageDiv.style.display = 'none';
+        }
     }
-
-    // Event listeners for form switching
+    
+    // Form switching event listeners
     showSignupLink.addEventListener('click', function(e) {
         e.preventDefault();
         showForm(signupForm);
     });
-
+    
     showLoginLink.addEventListener('click', function(e) {
         e.preventDefault();
         showForm(loginForm);
     });
-
+    
     forgotPasswordLink.addEventListener('click', function(e) {
         e.preventDefault();
         showForm(forgotPasswordForm);
     });
-
+    
     backToLoginLink.addEventListener('click', function(e) {
         e.preventDefault();
         showForm(loginForm);
     });
-
+    
     // Form submission handlers
     loginFormElement.addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -83,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
             submitBtn.textContent = 'Sign In';
         }
     });
-
+    
     signupFormElement.addEventListener('submit', async function(e) {
         e.preventDefault();
         
@@ -284,4 +295,9 @@ document.addEventListener('DOMContentLoaded', function() {
             strengthBar.style.background = strengthColor;
         });
     }
+}
+
+// Start waiting for authManager
+document.addEventListener('DOMContentLoaded', function() {
+    waitForAuthManager();
 }); 

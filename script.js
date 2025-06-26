@@ -324,4 +324,27 @@ style.textContent = `
         animation: shake 0.5s ease-in-out;
     }
 `;
-document.head.appendChild(style); 
+document.head.appendChild(style);
+
+// Handle scrolling to dashboard when coming from professor matching page
+function scrollToDashboardFromMatching() {
+    const dashboard = document.getElementById('userDashboard');
+    if (dashboard) {
+        // Calculate offset for navbar and new dashboard position
+        const navbarHeight = 80;
+        const offset = navbarHeight + 40; // Extra padding for new position
+        
+        // Scroll to dashboard with offset
+        const dashboardTop = dashboard.offsetTop - offset;
+        window.scrollTo({
+            top: dashboardTop,
+            behavior: 'smooth'
+        });
+    }
+}
+
+// Check if we should scroll to dashboard (when coming from professor matching page)
+if (window.location.hash === '#userDashboard') {
+    // Small delay to ensure page is fully loaded
+    setTimeout(scrollToDashboardFromMatching, 200);
+} 

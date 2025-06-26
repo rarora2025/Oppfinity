@@ -1,10 +1,16 @@
 // Authentication functions
 class AuthManager {
     constructor() {
-        this.auth = window.auth;
-        this.googleProvider = window.googleProvider;
+        this.auth = firebase.auth();
+        this.db = firebase.firestore();
+        this.googleProvider = new firebase.auth.GoogleAuthProvider();
+        
+        // Only set up profile photo handlers if we're on a page with dashboard elements
+        if (document.getElementById('dashboardProfilePhotoInput')) {
+            this.setupProfilePhotoHandlers();
+        }
+        
         this.setupAuthStateListener();
-        this.setupProfilePhotoHandlers();
     }
 
     // Setup authentication state listener
@@ -128,6 +134,7 @@ class AuthManager {
             this.updateDashboardInfo(user);
             this.loadUserProfile();
             this.setupRealtimeProfileCompletion();
+            this.setupDashboardEventListeners();
         }
     }
 
@@ -172,7 +179,7 @@ class AuthManager {
 
         try {
             // Load from Firestore
-            const doc = await window.db.collection('users').doc(user.uid).get();
+            const doc = await this.db.collection('users').doc(user.uid).get();
             if (doc.exists) {
                 const profile = doc.data();
                 this.populateProfileForm(profile);
@@ -186,7 +193,7 @@ class AuthManager {
     }
 
     // Populate profile form
-    populateProfileForm(profile) {
+    async populateProfileForm(profile) {
         const fields = ['fieldOfInterest', 'dateOfBirth', 'schoolName', 'researchInterests'];
         fields.forEach(field => {
             const element = document.getElementById(field);
@@ -204,32 +211,48 @@ class AuthManager {
         }
         
         this.setupRealtimeProfileCompletion();
+        
+        // Check completion and show/hide match button after populating
+        setTimeout(() => {
+            this.updateProfileCompletion();
+        }, 100);
     }
 
     // Update profile completion percentage
-    updateProfileCompletion(profile) {
+    updateProfileCompletion(profile = null) {
         const requiredFields = ['fieldOfInterest', 'dateOfBirth', 'schoolName'];
-        const optionalFields = ['researchInterests', 'resumeFile'];
         
         let completed = 0;
-        let total = requiredFields.length + (optionalFields.length * 0.5); // Optional fields count as half
+        let total = requiredFields.length;
         
-        requiredFields.forEach(field => {
-            if (profile[field] && profile[field].trim() !== '') {
-                completed++;
-            }
-        });
-        
-        optionalFields.forEach(field => {
-            if (profile[field] && (typeof profile[field] === 'string' ? profile[field].trim() !== '' : true)) {
-                completed += 0.5;
-            }
-        });
+        // If profile is provided, use it; otherwise read from DOM
+        if (profile) {
+            requiredFields.forEach(field => {
+                if (profile[field] && profile[field].trim() !== '') {
+                    completed++;
+                }
+            });
+        } else {
+            // Read from DOM elements
+            requiredFields.forEach(field => {
+                const element = document.getElementById(field);
+                if (element && element.value && element.value.trim() !== '') {
+                    completed++;
+                }
+            });
+        }
         
         const percentage = Math.round((completed / total) * 100);
         const completionElement = document.getElementById('profileCompletion');
         if (completionElement) {
             completionElement.textContent = `${percentage}%`;
+        }
+        
+        // Show/hide match button based on completion
+        if (percentage === 100) {
+            this.showMatchProfessorsButton();
+        } else {
+            this.hideMatchProfessorsButton();
         }
     }
 
@@ -252,7 +275,7 @@ class AuthManager {
             }
 
             // Save to Firestore
-            await window.db.collection('users').doc(user.uid).set({
+            await this.db.collection('users').doc(user.uid).set({
                 ...profileData,
                 profilePhoto: profilePhoto,
                 email: user.email,
@@ -422,36 +445,23 @@ class AuthManager {
 
     // Setup profile photo handlers
     setupProfilePhotoHandlers() {
-        // Profile photo upload handlers
-        const profilePhotoInputs = ['profilePhotoInput', 'dashboardProfilePhotoInput'];
+        const dashboardPhotoInput = document.getElementById('dashboardProfilePhotoInput');
+        const dashboardPhoto = document.getElementById('dashboardProfilePhoto');
+        const dashboardInitial = document.getElementById('dashboardUserInitial');
+        const dashboardAvatar = document.getElementById('dashboardProfileAvatar');
         
-        profilePhotoInputs.forEach(inputId => {
-            const input = document.getElementById(inputId);
-            const avatar = document.getElementById(inputId.replace('Input', ''));
-            const initial = document.getElementById(inputId.replace('PhotoInput', 'UserInitial'));
-            
-            if (input && avatar) {
-                input.addEventListener('change', (event) => {
-                    this.handleProfilePhotoUpload(event, avatar.id, initial ? initial.id : null);
-                });
-                
-                avatar.addEventListener('click', () => {
-                    input.click();
-                });
-            }
-        });
-
-        // Resume upload handlers
-        this.setupResumeUploadHandlers();
-
-        // Profile form save handler
-        const userProfileForm = document.getElementById('userProfileForm');
-        if (userProfileForm) {
-            userProfileForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                this.handleProfileSave();
-            });
+        // Only set up handlers if elements exist
+        if (!dashboardPhotoInput || !dashboardPhoto || !dashboardInitial || !dashboardAvatar) {
+            return;
         }
+        
+        dashboardAvatar.addEventListener('click', () => {
+            dashboardPhotoInput.click();
+        });
+        
+        dashboardPhotoInput.addEventListener('change', (e) => {
+            this.handleProfilePhotoUpload(e, 'dashboardProfilePhoto', 'dashboardUserInitial');
+        });
     }
 
     setupResumeUploadHandlers() {
@@ -586,7 +596,7 @@ class AuthManager {
             };
             
             // Save to Firebase with explicit resumeFile removal
-            await window.db.collection('users').doc(user.uid).set(profileData, { merge: true });
+            await this.db.collection('users').doc(user.uid).set(profileData, { merge: true });
             
             this.showSuccessMessage('Resume removed successfully!');
         } catch (error) {
@@ -642,20 +652,17 @@ class AuthManager {
         reader.readAsDataURL(file);
     }
 
-    // Handle profile save with better feedback
+    // Handle profile save
     async handleProfileSave() {
-        const user = this.auth.currentUser;
-        if (!user) return;
-
         const saveBtn = document.querySelector('.save-profile-btn');
         const originalText = saveBtn.textContent;
         
+        // Show loading state
+        saveBtn.disabled = true;
+        saveBtn.style.opacity = '0.7';
+        saveBtn.textContent = 'Saving...';
+        
         try {
-            // Show loading state
-            saveBtn.textContent = 'Saving...';
-            saveBtn.disabled = true;
-            saveBtn.style.opacity = '0.7';
-            
             // Collect form data
             const profileData = {
                 fieldOfInterest: document.getElementById('fieldOfInterest').value,
@@ -673,12 +680,30 @@ class AuthManager {
                 };
             }
             
-            // Save profile (with or without resume)
+            // Save profile
             await this.saveUserProfile(profileData);
+            
+            // Check if profile is 100% complete
+            const requiredFields = ['fieldOfInterest', 'dateOfBirth', 'schoolName'];
+            let completed = 0;
+            requiredFields.forEach(field => {
+                if (profileData[field] && profileData[field].trim() !== '') {
+                    completed++;
+                }
+            });
+            
+            const percent = Math.round((completed / requiredFields.length) * 100);
             
             // Show success state
             saveBtn.textContent = 'Saved! ✓';
             saveBtn.style.background = 'linear-gradient(45deg, #2ecc71, #27ae60)';
+            
+            // Show popup if profile is 100% complete
+            if (percent === 100) {
+                setTimeout(() => {
+                    this.showProfileCompletionPopup();
+                }, 1000); // Show popup after 1 second
+            }
             
             // Reset button after 3 seconds
             setTimeout(() => {
@@ -737,12 +762,69 @@ class AuthManager {
             });
             const percent = Math.round((completed / requiredFields.length) * 100);
             this.updateCircularProgress(percent);
+            
+            // Auto-save when profile reaches 100% and show match button
+            if (percent === 100) {
+                this.autoSaveProfile();
+                this.showMatchProfessorsButton();
+            } else {
+                this.hideMatchProfessorsButton();
+            }
         };
         requiredFields.forEach(field => {
             const el = document.getElementById(field);
             if (el) el.addEventListener('input', update);
         });
         update(); // Initial call
+    }
+
+    // Auto-save profile when it reaches 100%
+    async autoSaveProfile() {
+        const user = this.auth.currentUser;
+        if (!user) return;
+
+        try {
+            // Collect form data
+            const profileData = {
+                fieldOfInterest: document.getElementById('fieldOfInterest').value,
+                dateOfBirth: document.getElementById('dateOfBirth').value,
+                schoolName: document.getElementById('schoolName').value,
+                researchInterests: document.getElementById('researchInterests').value
+            };
+            
+            // Handle resume file if uploaded (only save file name)
+            const resumeUpload = document.getElementById('resumeUpload');
+            if (resumeUpload && resumeUpload.files.length > 0) {
+                const file = resumeUpload.files[0];
+                profileData.resumeFile = {
+                    name: file.name
+                };
+            }
+            
+            // Save profile
+            await this.saveUserProfile(profileData);
+            console.log('Profile auto-saved at 100% completion');
+        } catch (error) {
+            console.error('Error auto-saving profile:', error);
+        }
+    }
+
+    // Show the match professors button
+    showMatchProfessorsButton() {
+        const matchBtn = document.getElementById('matchProfessorsBtn');
+        if (matchBtn) {
+            matchBtn.style.display = 'flex';
+            // Add a subtle animation when it appears
+            matchBtn.style.animation = 'fadeInUp 0.5s ease-out';
+        }
+    }
+
+    // Hide the match professors button
+    hideMatchProfessorsButton() {
+        const matchBtn = document.getElementById('matchProfessorsBtn');
+        if (matchBtn) {
+            matchBtn.style.display = 'none';
+        }
     }
 
     updateCircularProgress(percent) {
@@ -761,6 +843,86 @@ class AuthManager {
             circle.style.strokeDashoffset = offset;
         }
         if (text) text.textContent = percent + '%';
+    }
+
+    setupDashboardEventListeners() {
+        // Resume upload handlers
+        this.setupResumeUploadHandlers();
+
+        // Profile form save handler
+        const userProfileForm = document.getElementById('userProfileForm');
+        if (userProfileForm) {
+            userProfileForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.handleProfileSave();
+            });
+        }
+
+        // Add event listeners
+        const resumeUpload = document.getElementById('resumeUpload');
+        const resumeUploadArea = document.getElementById('resumeUploadArea');
+        const removeResumeBtn = document.getElementById('removeResumeBtn');
+        const matchBtn = document.getElementById('matchProfessorsBtn');
+
+        if (resumeUpload) {
+            resumeUpload.addEventListener('change', (e) => this.handleResumeUpload(e));
+        }
+        
+        if (resumeUploadArea) {
+            resumeUploadArea.addEventListener('click', () => {
+                if (resumeUpload) resumeUpload.click();
+            });
+        }
+        
+        if (removeResumeBtn) {
+            removeResumeBtn.addEventListener('click', () => this.removeResume());
+        }
+        
+        // Add event listener for match professors button
+        if (matchBtn) {
+            matchBtn.addEventListener('click', () => {
+                window.location.href = 'professor-matching.html';
+            });
+        }
+    }
+
+    // Show profile completion popup
+    showProfileCompletionPopup() {
+        const popup = document.getElementById('profileCompletionPopup');
+        if (popup) {
+            popup.style.display = 'flex';
+            
+            // Add event listeners for popup buttons
+            const matchBtn = document.getElementById('popupMatchBtn');
+            const closeBtn = document.getElementById('popupCloseBtn');
+            
+            if (matchBtn) {
+                matchBtn.addEventListener('click', () => {
+                    window.location.href = 'professor-matching.html';
+                });
+            }
+            
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    this.hideProfileCompletionPopup();
+                });
+            }
+            
+            // Close popup when clicking outside
+            popup.addEventListener('click', (e) => {
+                if (e.target === popup) {
+                    this.hideProfileCompletionPopup();
+                }
+            });
+        }
+    }
+
+    // Hide profile completion popup
+    hideProfileCompletionPopup() {
+        const popup = document.getElementById('profileCompletionPopup');
+        if (popup) {
+            popup.style.display = 'none';
+        }
     }
 }
 
