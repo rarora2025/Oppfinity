@@ -100,62 +100,65 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('contactForm');
     const formMessage = document.getElementById('formMessage');
 
-    // Enhanced form submission
-    form.addEventListener('submit', function(e) {
-        // Show loading state
-        const submitBtn = form.querySelector('button[type="submit"]');
-        const originalText = submitBtn.textContent;
-        submitBtn.textContent = '🚀 Processing...';
-        submitBtn.disabled = true;
-        
-        // Add loading animation
-        submitBtn.style.background = 'linear-gradient(45deg, #0099cc, #00d4ff)';
-        submitBtn.style.animation = 'pulse 1s infinite';
-        
-        // Store form data for potential manual redirect
-        const formData = new FormData(form);
-        const formDataObj = {};
-        formData.forEach((value, key) => {
-            formDataObj[key] = value;
-        });
-        
-        // Let the form submit naturally, but also handle redirect manually
-        setTimeout(() => {
-            // If we're still on the same page after 3 seconds, redirect manually
-            setTimeout(() => {
-                if (window.location.pathname.includes('index.html') || window.location.pathname === '/') {
-                    window.location.href = 'database.html';
-                }
-            }, 3000);
-        }, 1000);
-    });
-
-    // Enhanced form field interactions
-    const formFields = form.querySelectorAll('input, textarea');
-    
-    formFields.forEach(field => {
-        // Add focus effects
-        field.addEventListener('focus', function() {
-            this.parentElement.classList.add('focused');
-            this.style.transform = 'translateY(-2px)';
-        });
-        
-        field.addEventListener('blur', function() {
-            this.parentElement.classList.remove('focused');
-            this.style.transform = 'translateY(0)';
-        });
-        
-        // Add typing animation for text inputs
-        if (field.type === 'text' || field.type === 'email' || field.tagName === 'TEXTAREA') {
-            field.addEventListener('input', function() {
-                if (this.value.length > 0) {
-                    this.style.borderColor = '#00d4ff';
-    } else {
-                    this.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-                }
+    // Only add event listeners if the form exists
+    if (form && formMessage) {
+        // Enhanced form submission
+        form.addEventListener('submit', function(e) {
+            // Show loading state
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = '🚀 Processing...';
+            submitBtn.disabled = true;
+            
+            // Add loading animation
+            submitBtn.style.background = 'linear-gradient(45deg, #0099cc, #00d4ff)';
+            submitBtn.style.animation = 'pulse 1s infinite';
+            
+            // Store form data for potential manual redirect
+            const formData = new FormData(form);
+            const formDataObj = {};
+            formData.forEach((value, key) => {
+                formDataObj[key] = value;
             });
-        }
-    });
+            
+            // Let the form submit naturally, but also handle redirect manually
+            setTimeout(() => {
+                // If we're still on the same page after 3 seconds, redirect manually
+                setTimeout(() => {
+                    if (window.location.pathname.includes('index.html') || window.location.pathname === '/') {
+                        window.location.href = 'database.html';
+                    }
+                }, 3000);
+            }, 1000);
+        });
+
+        // Enhanced form field interactions
+        const formFields = form.querySelectorAll('input, textarea');
+        
+        formFields.forEach(field => {
+            // Add focus effects
+            field.addEventListener('focus', function() {
+                this.parentElement.classList.add('focused');
+                this.style.transform = 'translateY(-2px)';
+            });
+            
+            field.addEventListener('blur', function() {
+                this.parentElement.classList.remove('focused');
+                this.style.transform = 'translateY(0)';
+            });
+            
+            // Add typing animation for text inputs
+            if (field.type === 'text' || field.type === 'email' || field.tagName === 'TEXTAREA') {
+                field.addEventListener('input', function() {
+                    if (this.value.length > 0) {
+                        this.style.borderColor = '#00d4ff';
+                    } else {
+                        this.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                    }
+                });
+            }
+        });
+    }
 });
 
 // Scroll animations
@@ -280,6 +283,8 @@ function showErrorMessage(message) {
 // Add form validation with visual feedback
 function validateForm() {
     const form = document.getElementById('contactForm');
+    if (!form) return false; // Return false if form doesn't exist
+    
     const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
     let isValid = true;
     
@@ -290,7 +295,7 @@ function validateForm() {
             isValid = false;
         } else {
             input.style.borderColor = '#00d4ff';
-    }
+        }
     });
     
     return isValid;

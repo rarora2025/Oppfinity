@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Your Plan - Oppfinity</title>
+    <link rel="icon" type="image/png" href="opp-logo.png">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="opp-logo.png" alt="Oppfinity Logo" class="logo-img">
+            <h1>Oppfinity</h1>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="email-writing.html" class="back-btn">← Back to Emails</a>
+        </div>
+    </nav>
+
+    <div class="checkout-container">
+        <div class="checkout-header">
+            <h1>Choose Your Success Plan</h1>
+            <p>Select the perfect plan to maximize your research opportunities</p>
+        </div>
+
+        <div class="pricing-grid">
+            <!-- Starter Plan -->
+            <div class="pricing-card" data-plan="starter">
+                <div class="plan-header">
+                    <h3>Starter</h3>
+                    <div class="price">
+                        <span class="currency">$</span>
+                        <span class="amount">29</span>
+                        <span class="period">/month</span>
+                    </div>
+                    <p class="plan-subtitle">Perfect for getting started</p>
+                </div>
+                
+                <div class="plan-features">
+                    <div class="feature">
+                        <span class="feature-icon">📧</span>
+                        <span class="feature-text">Send emails to 5 professors</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">🎯</span>
+                        <span class="feature-text">Basic professor database (500+ professors)</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">📊</span>
+                        <span class="feature-text">75% average response rate</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">📝</span>
+                        <span class="feature-text">AI-generated email templates</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">📈</span>
+                        <span class="feature-text">Basic analytics dashboard</span>
+                    </div>
+                </div>
+                
+                <button class="select-plan-btn" onclick="selectPlan('starter')">Select Starter</button>
+            </div>
+
+            <!-- Pro Plan -->
+            <div class="pricing-card featured" data-plan="pro">
+                <div class="popular-badge">Most Popular</div>
+                <div class="plan-header">
+                    <h3>Pro</h3>
+                    <div class="price">
+                        <span class="currency">$</span>
+                        <span class="amount">79</span>
+                        <span class="period">/month</span>
+                    </div>
+                    <p class="plan-subtitle">Best value for serious students</p>
+                </div>
+                
+                <div class="plan-features">
+                    <div class="feature">
+                        <span class="feature-icon">📧</span>
+                        <span class="feature-text">Send emails to 15 professors</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">🎯</span>
+                        <span class="feature-text">Premium professor database (2,000+ professors)</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">📊</span>
+                        <span class="feature-text">89% average response rate</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">📝</span>
+                        <span class="feature-text">Personalized AI email generation</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">📈</span>
+                        <span class="feature-text">Advanced analytics & tracking</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">🔄</span>
+                        <span class="feature-text">Follow-up email automation</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">🎓</span>
+                        <span class="feature-text">Priority professor matching</span>
+                    </div>
+                </div>
+                
+                <button class="select-plan-btn featured" onclick="selectPlan('pro')">Select Pro</button>
+            </div>
+
+            <!-- Elite Plan -->
+            <div class="pricing-card" data-plan="elite">
+                <div class="plan-header">
+                    <h3>Elite</h3>
+                    <div class="price">
+                        <span class="currency">$</span>
+                        <span class="amount">149</span>
+                        <span class="period">/month</span>
+                    </div>
+                    <p class="plan-subtitle">Maximum research opportunities</p>
+                </div>
+                
+                <div class="plan-features">
+                    <div class="feature">
+                        <span class="feature-icon">📧</span>
+                        <span class="feature-text">Send emails to 30 professors</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">🎯</span>
+                        <span class="feature-text">Elite professor database (5,000+ professors)</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">📊</span>
+                        <span class="feature-text">94% average response rate</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">📝</span>
+                        <span class="feature-text">Custom AI email optimization</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">📈</span>
+                        <span class="feature-text">Comprehensive analytics suite</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">🔄</span>
+                        <span class="feature-text">Multi-stage email campaigns</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">🎓</span>
+                        <span class="feature-text">VIP professor introductions</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">📞</span>
+                        <span class="feature-text">1-on-1 consultation calls</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">🏆</span>
+                        <span class="feature-text">Guaranteed research placement</span>
+                    </div>
+                </div>
+                
+                <button class="select-plan-btn" onclick="selectPlan('elite')">Select Elite</button>
+            </div>
+        </div>
+
+        <div class="success-stats">
+            <h2>Why Students Choose Oppfinity</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-number">1,200+</div>
+                    <div class="stat-label">Students Connected</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📧</div>
+                    <div class="stat-number">15,000+</div>
+                    <div class="stat-label">Emails Sent</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎓</div>
+                    <div class="stat-number">89%</div>
+                    <div class="stat-label">Average Response Rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Research Placements</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="testimonials-section">
+            <h2>Student Success Stories</h2>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <p>"Oppfinity helped me connect with 3 Harvard professors. Within 2 weeks, I had research opportunities lined up!"</p>
+                    <div class="testimonial-author">
+                        <strong>Sarah Chen</strong> - Harvard Research Intern
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p>"The Pro plan was worth every penny. I got responses from 12 out of 15 professors I contacted!"</p>
+                    <div class="testimonial-author">
+                        <strong>Michael Rodriguez</strong> - MIT Research Assistant
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p>"Elite plan got me into Stanford's top research lab. The personalized emails made all the difference."</p>
+                    <div class="testimonial-author">
+                        <strong>Alex Johnson</strong> - Stanford Research Fellow
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="payment-modal" id="paymentModal">
+        <div class="payment-content">
+            <button class="close-modal" onclick="closePaymentModal()">&times;</button>
+            
+            <div class="payment-header">
+                <h2>Complete Your Purchase</h2>
+                <p>Enter your payment details to start connecting with professors</p>
+            </div>
+            
+            <div class="plan-summary" id="planSummary">
+                <!-- Plan summary will be populated by JavaScript -->
+            </div>
+            
+            <form class="payment-form" id="paymentForm">
+                <div class="form-group">
+                    <label for="cardName">Cardholder Name</label>
+                    <input type="text" id="cardName" placeholder="John Doe" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="cardNumber">Card Number</label>
+                    <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                </div>
+                
+                <div style="display: flex; gap: 1rem;">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="expiry">Expiry Date</label>
+                        <input type="text" id="expiry" placeholder="MM/YY" maxlength="5" required>
+                    </div>
+                    
+                    <div class="form-group" style="flex: 1;">
+                        <label for="cvv">CVV</label>
+                        <input type="text" id="cvv" placeholder="123" maxlength="4" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="your@email.com" required>
+                </div>
+            </form>
+            
+            <div class="payment-actions">
+                <button class="cancel-btn" onclick="closePaymentModal()">Cancel</button>
+                <button class="pay-btn" onclick="processPayment()">
+                    <i class="fas fa-lock"></i>
+                    Pay Securely
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Oppfinity</h3>
+                <p>Connecting students with research opportunities</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <a href="index.html">Home</a>
+                <a href="professor-matching.html">Professor Matching</a>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p>Email: rarora2025@gmail.com</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Oppfinity. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        // Check if user has selected professors
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectedProfessors = localStorage.getItem('selectedProfessors');
+            if (!selectedProfessors) {
+                // Redirect back to professor matching if no professors selected
+                window.location.href = 'professor-matching.html';
+                return;
+            }
+
+            // Parse selected professors
+            const professors = JSON.parse(selectedProfessors);
+            console.log('Selected professors for checkout:', professors);
+            
+            // Add input formatting
+            setupInputFormatting();
+        });
+
+        function selectPlan(plan) {
+            // Store selected plan
+            localStorage.setItem('selectedPlan', plan);
+            
+            // Get plan details
+            const planDetails = {
+                starter: {
+                    name: 'Starter',
+                    price: 29,
+                    emails: 5,
+                    database: '500+ professors',
+                    successRate: '75%',
+                    features: [
+                        'Send emails to 5 professors',
+                        'Basic professor database (500+ professors)',
+                        '75% average response rate',
+                        'AI-generated email templates',
+                        'Basic analytics dashboard'
+                    ]
+                },
+                pro: {
+                    name: 'Pro',
+                    price: 79,
+                    emails: 15,
+                    database: '2,000+ professors',
+                    successRate: '89%',
+                    features: [
+                        'Send emails to 15 professors',
+                        'Premium professor database (2,000+ professors)',
+                        '89% average response rate',
+                        'Personalized AI email generation',
+                        'Advanced analytics & tracking',
+                        'Follow-up email automation',
+                        'Priority professor matching'
+                    ]
+                },
+                elite: {
+                    name: 'Elite',
+                    price: 149,
+                    emails: 30,
+                    database: '5,000+ professors',
+                    successRate: '94%',
+                    features: [
+                        'Send emails to 30 professors',
+                        'Elite professor database (5,000+ professors)',
+                        '94% average response rate',
+                        'Custom AI email optimization',
+                        'Comprehensive analytics suite',
+                        'Multi-stage email campaigns',
+                        'VIP professor introductions',
+                        '1-on-1 consultation calls',
+                        'Guaranteed research placement'
+                    ]
+                }
+            };
+
+            const selectedPlan = planDetails[plan];
+            
+            // Populate plan summary
+            document.getElementById('planSummary').innerHTML = `
+                <h3>${selectedPlan.name} Plan - $${selectedPlan.price}/month</h3>
+                <ul>
+                    ${selectedPlan.features.map(feature => `<li>${feature}</li>`).join('')}
+                </ul>
+            `;
+            
+            // Show payment modal
+            document.getElementById('paymentModal').classList.add('active');
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.remove('active');
+            document.getElementById('paymentForm').reset();
+        }
+
+        function setupInputFormatting() {
+            // Card number formatting
+            const cardNumber = document.getElementById('cardNumber');
+            cardNumber.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+                let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+                e.target.value = formattedValue;
+            });
+
+            // Expiry date formatting
+            const expiry = document.getElementById('expiry');
+            expiry.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length >= 2) {
+                    value = value.slice(0, 2) + '/' + value.slice(2, 4);
+                }
+                e.target.value = value;
+            });
+
+            // CVV formatting
+            const cvv = document.getElementById('cvv');
+            cvv.addEventListener('input', function(e) {
+                e.target.value = e.target.value.replace(/\D/g, '');
+            });
+        }
+
+        function processPayment() {
+            const form = document.getElementById('paymentForm');
+            const formData = new FormData(form);
+            
+            // Basic validation
+            const cardName = document.getElementById('cardName').value.trim();
+            const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+            const expiry = document.getElementById('expiry').value;
+            const cvv = document.getElementById('cvv').value;
+            const email = document.getElementById('email').value.trim();
+            
+            if (!cardName || !cardNumber || !expiry || !cvv || !email) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            if (cardNumber.length < 13 || cardNumber.length > 19) {
+                alert('Please enter a valid card number');
+                return;
+            }
+            
+            if (!/^\d{2}\/\d{2}$/.test(expiry)) {
+                alert('Please enter a valid expiry date (MM/YY)');
+                return;
+            }
+            
+            if (cvv.length < 3 || cvv.length > 4) {
+                alert('Please enter a valid CVV');
+                return;
+            }
+            
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+            
+            // Show loading state
+            const payBtn = document.querySelector('.pay-btn');
+            const originalText = payBtn.innerHTML;
+            payBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            payBtn.disabled = true;
+            
+            // Simulate payment processing
+            setTimeout(() => {
+                // Simulate successful payment
+                const selectedPlan = localStorage.getItem('selectedPlan');
+                const planDetails = {
+                    starter: { name: 'Starter', price: 29 },
+                    pro: { name: 'Pro', price: 79 },
+                    elite: { name: 'Elite', price: 149 }
+                };
+                
+                const plan = planDetails[selectedPlan];
+                
+                // Show success message
+                document.querySelector('.payment-content').innerHTML = `
+                    <div style="text-align: center; padding: 2rem;">
+                        <div style="font-size: 4rem; color: #2ecc71; margin-bottom: 1rem;">✅</div>
+                        <h2 style="color: #2ecc71; margin-bottom: 1rem;">Payment Successful!</h2>
+                        <p style="color: #666; margin-bottom: 2rem;">
+                            Your ${plan.name} plan has been activated. You can now start sending emails to professors!
+                        </p>
+                        <button class="pay-btn" onclick="window.location.href='success.html'">
+                            <i class="fas fa-rocket"></i>
+                            Start Sending Emails
+                        </button>
+                    </div>
+                `;
+                
+                // Store payment success
+                localStorage.setItem('paymentSuccess', 'true');
+                localStorage.setItem('activePlan', selectedPlan);
+                
+            }, 3000); // Simulate 3-second processing time
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('paymentModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePaymentModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closePaymentModal();
+            }
+        });
+    </script>
+</body>
+</html> 

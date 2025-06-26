@@ -680,8 +680,20 @@ class AuthManager {
                 };
             }
             
-            // Save profile
+            // Save profile to Firebase
             await this.saveUserProfile(profileData);
+            
+            // Also save to localStorage for email generation
+            const user = this.auth.currentUser;
+            if (user) {
+                const userProfileForEmails = {
+                    name: user.displayName || user.email.split('@')[0],
+                    schoolName: profileData.schoolName,
+                    fieldOfInterest: profileData.fieldOfInterest,
+                    researchInterests: profileData.researchInterests
+                };
+                localStorage.setItem('userProfile', JSON.stringify(userProfileForEmails));
+            }
             
             // Check if profile is 100% complete
             const requiredFields = ['fieldOfInterest', 'dateOfBirth', 'schoolName'];
@@ -801,8 +813,18 @@ class AuthManager {
                 };
             }
             
-            // Save profile
+            // Save profile to Firebase
             await this.saveUserProfile(profileData);
+            
+            // Also save to localStorage for email generation
+            const userProfileForEmails = {
+                name: user.displayName || user.email.split('@')[0],
+                schoolName: profileData.schoolName,
+                fieldOfInterest: profileData.fieldOfInterest,
+                researchInterests: profileData.researchInterests
+            };
+            localStorage.setItem('userProfile', JSON.stringify(userProfileForEmails));
+            
             console.log('Profile auto-saved at 100% completion');
         } catch (error) {
             console.error('Error auto-saving profile:', error);
