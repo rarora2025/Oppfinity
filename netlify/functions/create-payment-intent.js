@@ -9,15 +9,19 @@ exports.handler = async (event) => {
     }
 
     try {
-        const { paymentMethodId, amount } = JSON.parse(event.body);
+        const { plan, amount } = JSON.parse(event.body);
 
-        // Create a PaymentIntent
+        // Create a PaymentIntent without immediate confirmation
         const paymentIntent = await stripe.paymentIntents.create({
             amount: amount,
             currency: 'usd',
-            payment_method: paymentMethodId,
-            confirm: true,
-            return_url: 'https://oppfinity.com/success.html'
+            // Don't confirm immediately - let the frontend handle confirmation
+            automatic_payment_methods: {
+                enabled: true,
+            },
+            metadata: {
+                plan: plan
+            }
         });
 
         return {
@@ -28,6 +32,7 @@ exports.handler = async (event) => {
             })
         };
     } catch (error) {
+        console.error('Stripe error:', error);
         return {
             statusCode: 400,
             body: JSON.stringify({
