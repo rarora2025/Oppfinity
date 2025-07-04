@@ -469,15 +469,11 @@
         // Initialize Stripe when the page loads
         document.addEventListener('DOMContentLoaded', async function() {
             try {
-                // Fetch publishable key from server
-                const response = await fetch('/api/stripe-key');
-                const data = await response.json();
-                
-                // Initialize Stripe with fetched key
-                stripe = Stripe(data.publishableKey);
+                // Initialize Stripe with publishable key
+                stripe = Stripe('pk_live_51RG2OLA9NPiijwfcdkynVJVgUIfdwdIEG6RmXI3wSoTftXjvPls6Y1kDGbtB3ELlakMGu9cYFYyxivNidPwlGYiB00IhLCh7ZW');
                 elements = stripe.elements();
                 
-                console.log('✅ Stripe initialized with fetched key');
+                console.log('✅ Stripe initialized with publishable key');
             } catch (error) {
                 console.error('❌ Failed to initialize Stripe:', error);
                 alert('Payment system is not available. Please try again later.');

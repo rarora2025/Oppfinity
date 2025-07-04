@@ -1,0 +1,20 @@
+{
+	"geolocation": {
+		"data": {
+			"city": "Greenwich",
+			"country": {
+				"code": "US",
+				"name": "United States"
+			},
+			"subdivision": {
+				"code": "CT",
+				"name": "Connecticut"
+			},
+			"timezone": "America/New_York",
+			"latitude": 41.047,
+			"longitude": -73.6224,
+			"postalCode": "06830"
+		},
+		"timestamp": 1750727456933
+	}
+}
