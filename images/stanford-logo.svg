@@ -1,0 +1,20 @@
+<svg width="120" height="80" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="stanfordGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8C1515;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6A0F0F;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Stanford Tree -->
+  <path d="M60 15 L50 25 L45 35 L55 45 L65 45 L75 35 L70 25 Z" fill="url(#stanfordGrad)" stroke="#8C1515" stroke-width="1"/>
+  
+  <!-- Tree trunk -->
+  <rect x="58" y="45" width="4" height="15" fill="#8C1515"/>
+  
+  <!-- "S" for Stanford -->
+  <text x="60" y="35" font-family="Georgia, serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">S</text>
+  
+  <!-- University name -->
+  <text x="60" y="75" font-family="Georgia, serif" font-size="10" font-weight="bold" text-anchor="middle" fill="#8C1515">STANFORD</text>
+</svg> 

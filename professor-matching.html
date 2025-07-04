@@ -1,0 +1,1675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professor Matching & Email Generation - Oppfinity</title>
+    <link rel="icon" type="image/png" href="opp-logo.png">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="opp-logo.png" alt="Oppfinity Logo" class="logo-img">
+            <h1>Oppfinity</h1>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="index.html#userDashboard" class="back-btn">← Back to Dashboard</a>
+        </div>
+    </nav>
+
+    <div class="matching-container">
+
+
+
+
+                    
+        <!-- Results Section -->
+        <div class="results-section" id="resultsSection" style="display: none;">
+            <div class="results-header">
+                <h2>Your Matched Professors</h2>
+                <div class="selection-counter">
+                    <div class="counter-text">
+                        <span id="selectedCount">0</span> of <span id="totalCount">0</span> professors selected
+                    </div>
+                    <div class="counter-hint">Select professors to generate personalized emails</div>
+                    <button class="checkout-btn" onclick="goToCheckout()" id="continueBtn" disabled>
+                        <i class="fas fa-credit-card"></i>
+                        Continue to Checkout
+                    </button>
+                    </div>
+                </div>
+
+            <!-- Template Editor Button -->
+            <div class="template-actions">
+                <button class="edit-template-btn" onclick="openTemplateEditor()">
+                    <i class="fas fa-edit"></i>
+                    Edit Email Template
+                    </button>
+                <p class="template-hint">Customize your email template for all professors at once</p>
+                </div>
+
+            <!-- Professors Grid -->
+            <div class="professors-grid" id="professorsGrid">
+                        <!-- Professors will be populated here -->
+            </div>
+
+
+        </div>
+
+        <!-- Loading Section -->
+        <div class="loading-section" id="loadingSection" style="display: none;">
+            <div class="loading-content">
+                <div class="loading-header">
+                    <h2>Finding Your Perfect Professors</h2>
+                    <p>We're analyzing your research profile and finding professors who match your interests</p>
+                </div>
+                
+                <div class="loading-animation">
+                    <div class="loading-bar">
+                        <div class="loading-fill"></div>
+            </div>
+        </div>
+                
+                                <div class="loading-steps">
+                    <div class="step active">
+                        <div class="step-icon">🔍</div>
+                        <div class="step-content">
+                            <div class="step-text">Analyzing your research profile</div>
+                            <div class="step-subtext">Understanding your interests and background</div>
+                </div>
+                </div>
+                    <div class="step">
+                        <div class="step-icon">🏫</div>
+                        <div class="step-content">
+                            <div class="step-text">Searching universities</div>
+                            <div class="step-subtext">Discovering institutions in your area</div>
+                </div>
+                </div>
+                    <div class="step">
+                        <div class="step-icon">👨‍🏫</div>
+                        <div class="step-content">
+                            <div class="step-text">Finding professors</div>
+                            <div class="step-subtext">Matching research interests</div>
+            </div>
+        </div>
+                    <div class="step">
+                        <div class="step-icon">📧</div>
+                        <div class="step-content">
+                            <div class="step-text">Generating emails</div>
+                            <div class="step-subtext">Creating personalized messages</div>
+                    </div>
+                    </div>
+                        </div>
+                    </div>
+                </div>
+                
+    <!-- Email Template Editor Modal -->
+    <div class="template-modal" id="templateModal">
+        <div class="template-content">
+            <div class="template-header">
+                <h2>Edit Email Template</h2>
+                <button class="close-template" onclick="closeTemplateEditor()">&times;</button>
+                    </div>
+                
+            <div class="template-body">
+                <div class="template-section">
+                    <label for="emailSubject">Email Subject</label>
+                    <input type="text" id="emailSubject" placeholder="Research Opportunity Inquiry - [Research Area]" value="Research Opportunity Inquiry - [Research Area]">
+                        </div>
+                
+                <div class="template-section">
+                    <label for="emailBody">Email Body</label>
+                    <textarea id="emailBody" rows="12" placeholder="Enter your email template...">Dear Professor [LastName],
+
+I hope this email finds you well. My name is [YourName], and I am a high school student with a strong interest in [ResearchArea] research.
+
+I recently came across your work at [University] and was particularly impressed by your research in [ResearchArea]. Your publications on [ResearchInterests] have been incredibly inspiring to my academic journey.
+
+I am reaching out to inquire about potential research opportunities in your laboratory. I am particularly interested in [ResearchInterests] and would be eager to contribute to ongoing projects or discuss potential areas of collaboration.
+
+I have attached my resume and would be happy to provide any additional materials you might need. I am flexible with my schedule and would be willing to start immediately.
+
+Thank you for considering my application. I look forward to hearing from you.
+
+Best regards,
+[YourName]
+[YourSchool]</textarea>
+                </div>
+                
+                <div class="template-variables">
+                    <h4>Available Variables</h4>
+                    <div class="variable-grid">
+                        <span class="variable" onclick="insertVariable('[YourName]')">[YourName]</span>
+                        <span class="variable" onclick="insertVariable('[YourSchool]')">[YourSchool]</span>
+                        <span class="variable" onclick="insertVariable('[ResearchArea]')">[ResearchArea]</span>
+                        <span class="variable" onclick="insertVariable('[ResearchInterests]')">[ResearchInterests]</span>
+                        <span class="variable" onclick="insertVariable('[University]')">[University]</span>
+                        <span class="variable" onclick="insertVariable('[LastName]')">[LastName]</span>
+                    </div>
+                        </div>
+                    </div>
+                
+            <div class="template-actions">
+                <button class="preview-btn" onclick="previewTemplate()">
+                    <i class="fas fa-eye"></i>
+                    Preview
+                </button>
+                <button class="apply-btn" onclick="applyTemplate()">
+                    <i class="fas fa-check"></i>
+                    Apply to All Emails
+                </button>
+                <button class="reset-btn" onclick="resetTemplate()">
+                    <i class="fas fa-undo"></i>
+                    Reset
+                </button>
+                </div>
+            </div>
+        </div>
+
+    <!-- Template Preview Modal -->
+    <div class="preview-modal" id="previewModal">
+        <div class="preview-content">
+            <div class="preview-header">
+                <h3>Email Preview</h3>
+                <button class="close-preview" onclick="closePreview()">&times;</button>
+            </div>
+            <div class="preview-body" id="previewBody">
+                <!-- Preview content will be populated here -->
+            </div>
+            </div>
+        </div>
+
+
+
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        let professors = [];
+        let selectedProfessors = [];
+        let emailTemplate = {
+            subject: 'Research Opportunity Inquiry - [ResearchArea]',
+            body: `Dear Professor [LastName],
+
+I hope this email finds you well. My name is [YourName], and I am a high school student with a strong interest in [ResearchArea] research.
+
+I recently came across your work at [University] and was particularly impressed by your research in [ResearchArea]. Your publications on [ResearchInterests] have been incredibly inspiring to my academic journey.
+
+I am reaching out to inquire about potential research opportunities in your laboratory. I am particularly interested in [ResearchInterests] and would be eager to contribute to ongoing projects or discuss potential areas of collaboration.
+
+I have attached my resume and would be happy to provide any additional materials you might need. I am flexible with my schedule and would be willing to start immediately.
+
+Thank you for considering my application. I look forward to hearing from you.
+
+Best regards,
+[YourName]
+[YourSchool]`
+        };
+
+        // Auto-start professor matching when page loads
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('Page loaded, checking auth state...');
+
+            // Wait for Firebase auth to initialize with timeout
+            let user = null;
+            try {
+                await Promise.race([
+                    new Promise(resolve => {
+                        const unsubscribe = firebase.auth().onAuthStateChanged(user => {
+                            console.log('Auth state changed:', user);
+                            unsubscribe();
+                            resolve(user);
+                        });
+                    }),
+                    new Promise(resolve => setTimeout(() => {
+                        console.log('Auth timeout reached');
+                        resolve(null);
+                    }, 5000)) // 5 second timeout
+                ]).then(result => {
+                    user = result;
+                });
+            } catch (error) {
+                console.error('Auth state check error:', error);
+            }
+
+            // Fallback: try to get current user directly
+                if (!user) {
+                user = firebase.auth().currentUser;
+                console.log('Fallback user check:', user);
+            }
+
+            console.log('Final auth state check - User:', user);
+            
+            if (user) {
+                console.log('User authenticated, loading profile...');
+                try {
+                    // Load user profile and template from Firebase
+                    console.log('Fetching user document for UID:', user.uid);
+                    const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
+                    console.log('User document exists:', userDoc.exists);
+                    
+                    if (userDoc.exists) {
+                        const userData = userDoc.data();
+                        console.log('Loaded user data:', userData);
+                        console.log('Profile fields check:');
+                        console.log('- displayName:', userData.displayName);
+                        console.log('- schoolName:', userData.schoolName);
+                        console.log('- fieldOfInterest:', userData.fieldOfInterest);
+                        console.log('- researchInterests:', userData.researchInterests);
+                        
+                        localStorage.setItem('userProfile', JSON.stringify(userData));
+                        
+                        // Load email template from user document
+                        if (userData.emailTemplate) {
+                            emailTemplate = userData.emailTemplate;
+                        }
+                        
+                        // Profile is complete (button only available if profile is complete), start automatically
+                        console.log('Profile loaded - starting professor matching automatically');
+                        // Start loading immediately
+                        document.getElementById('loadingSection').style.display = 'block';
+                        document.getElementById('resultsSection').style.display = 'none';
+                        
+                        // Start the process
+                        simulateLoading();
+                    } else {
+                        console.log('No user document found in Firebase for UID:', user.uid);
+                        alert('Please complete your profile in the dashboard first.');
+                    }
+                } catch (error) {
+                    console.error('Error loading user data:', error);
+                    alert('Error loading your profile. Please try again.');
+                }
+            } else {
+                console.log('No authenticated user found');
+                // Redirect to home page for authentication
+                document.body.innerHTML = `
+                    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: #f8f9fa;">
+                        <div style="text-align: center; padding: 2rem; background: white; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 500px;">
+                            <h3>Authentication Required</h3>
+                            <p>Please log in to continue.</p>
+                            <button onclick="window.location.href='index.html'" style="background: #007bff; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 5px; cursor: pointer; margin: 0.5rem;">
+                                🏠 Go to Home
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+
+        async function checkAuthAndStart() {
+            const user = firebase.auth().currentUser;
+            console.log('Manual auth check - User:', user);
+            
+            if (user) {
+                try {
+                    // Load user profile and template from Firebase
+                    console.log('Fetching user document for UID:', user.uid);
+                    const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
+                    console.log('User document exists:', userDoc.exists);
+                    
+                    if (userDoc.exists) {
+                        const userData = userDoc.data();
+                        console.log('Loaded user data:', userData);
+                        
+                        // Save to localStorage
+                        localStorage.setItem('userProfile', JSON.stringify(userData));
+                        
+                        // Profile is complete (button only available if profile is complete), start automatically
+                        console.log('Profile loaded - starting automatically');
+                        document.getElementById('loadingSection').style.display = 'block';
+                        document.getElementById('resultsSection').style.display = 'none';
+                        simulateLoading();
+                    } else {
+                        alert('No profile found. Please complete your profile in the dashboard first.');
+                    }
+            } catch (error) {
+                    console.error('Error loading user data:', error);
+                    alert('Error loading your profile. Please try again.');
+                }
+            } else {
+                alert('Please log in to continue.');
+            }
+        }
+
+        function showLocalStorageData() {
+            const profileData = localStorage.getItem('userProfile');
+            console.log('localStorage userProfile:', profileData);
+            
+            if (profileData) {
+                const parsed = JSON.parse(profileData);
+                alert(`localStorage Profile Data:\n\nDisplay Name: ${parsed.displayName || 'NOT SET'}\nSchool: ${parsed.schoolName || 'NOT SET'}\nField: ${parsed.fieldOfInterest || 'NOT SET'}\nResearch: ${parsed.researchInterests || 'NOT SET'}`);
+            } else {
+                alert('No profile data found in localStorage');
+            }
+        }
+
+        async function fixMissingDisplayName() {
+            const user = firebase.auth().currentUser;
+            if (!user) {
+                alert('Please log in to continue.');
+                return;
+            }
+
+            try {
+                const nameFromEmail = user.email.split('@')[0];
+                const fixedDisplayName = nameFromEmail.charAt(0).toUpperCase() + nameFromEmail.slice(1);
+                
+                // Update the profile in Firebase
+                await firebase.firestore().collection('users').doc(user.uid).update({
+                    displayName: fixedDisplayName
+                });
+                
+                alert(`Display Name field fixed! Using: ${fixedDisplayName}\n\nRefreshing profile...`);
+                
+                // Refresh the profile
+                await refreshProfile();
+            } catch (error) {
+                console.error('Error fixing display name:', error);
+                alert('Error fixing display name field. Please try again.');
+            }
+        }
+
+        async function refreshProfile() {
+            const user = firebase.auth().currentUser;
+            if (!user) {
+                alert('Please log in to continue.');
+                return;
+            }
+
+            try {
+                const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
+                if (userDoc.exists) {
+                    let userData = userDoc.data();
+                    console.log('Refreshed user data:', userData);
+                    
+                    // Auto-fix missing displayName field using email
+                    if (!userData.displayName && user.email) {
+                        console.log('Auto-fixing missing displayName field using email');
+                        const nameFromEmail = user.email.split('@')[0];
+                        userData.displayName = nameFromEmail.charAt(0).toUpperCase() + nameFromEmail.slice(1);
+                        
+                        // Update the profile in Firebase
+                        await firebase.firestore().collection('users').doc(user.uid).update({
+                            displayName: userData.displayName
+                        });
+                        
+                        console.log('Updated profile with displayName:', userData.displayName);
+                    }
+                    
+                    localStorage.setItem('userProfile', JSON.stringify(userData));
+                    
+                    if (userData.emailTemplate) {
+                        emailTemplate = userData.emailTemplate;
+                    }
+                    
+                    // Check if profile is complete and auto-start
+                    if (userData.displayName && userData.schoolName && userData.fieldOfInterest && userData.researchInterests) {
+                        alert('Profile data refreshed successfully! Starting professor matching...');
+                        // Hide generate section and start loading immediately
+                        document.getElementById('generateSection').style.display = 'none';
+                        document.getElementById('loadingSection').style.display = 'block';
+                        document.getElementById('resultsSection').style.display = 'none';
+                        
+                        // Start the process
+                        simulateLoading();
+                } else {
+                        alert('Profile data refreshed, but profile is incomplete. Please complete your profile in the dashboard first.');
+                    }
+                } else {
+                    alert('No profile found. Please complete your profile in the dashboard first.');
+                }
+            } catch (error) {
+                console.error('Error refreshing profile:', error);
+                alert('Error refreshing profile. Please try again.');
+            }
+        }
+
+
+
+        function simulateLoading() {
+            const steps = document.querySelectorAll('.loading-steps .step');
+            const progressFill = document.querySelector('.loading-fill');
+            let currentStep = 0;
+
+            const interval = setInterval(() => {
+                if (currentStep < steps.length) {
+                    // Update active step
+                    steps.forEach((step, index) => {
+                        if (index <= currentStep) {
+                            step.classList.add('active');
+                        } else {
+                            step.classList.remove('active');
+                        }
+                    });
+
+                    // Update progress bar if it exists
+                    if (progressFill) {
+                        const progress = Math.round(((currentStep + 1) / steps.length) * 100);
+                        progressFill.style.width = progress + '%';
+                    }
+
+                    currentStep++;
+                } else {
+                    clearInterval(interval);
+                    // Loading complete - generate professors and emails
+                    setTimeout(() => {
+                        generateProfessorsAndEmails();
+                    }, 500);
+                }
+            }, 1500); // Step-by-step loading
+        }
+
+        async function generateProfessorsAndEmails() {
+            const userProfile = JSON.parse(localStorage.getItem('userProfile'));
+            console.log('🎯 Starting professor generation with profile:', userProfile);
+            
+            try {
+                
+                // Generate professors using AI (simulated)
+                professors = await generateProfessorList(userProfile);
+                console.log('✅ Generated professors:', professors);
+                
+                if (!professors || professors.length === 0) {
+                    throw new Error('No professors were generated');
+                }
+                
+                // Generate emails for each professor
+                for (let professor of professors) {
+                    professor.email = await generateEmailForProfessor(professor, userProfile, emailTemplate);
+                }
+
+                // Add completion animation
+                setTimeout(() => {
+                    // Stop dynamic loading
+                    stopDynamicLoading();
+                    
+                    // Display results
+                    displayProfessors();
+                    
+                    // Hide loading, show results
+                    document.getElementById('loadingSection').style.display = 'none';
+                    document.getElementById('resultsSection').style.display = 'block';
+                    
+                    console.log('🎉 Professor generation completed successfully');
+                }, 800);
+                
+            } catch (error) {
+                console.error('❌ Error in generateProfessorsAndEmails:', error);
+                alert('Error generating professors. Please try again.');
+                
+                // Show error state
+                document.getElementById('loadingSection').style.display = 'none';
+                document.getElementById('generateSection').style.display = 'block';
+            }
+        }
+
+        async function generateProfessorList(userProfile) {
+            // Get user location and research interests
+            const userField = userProfile.fieldOfInterest;
+            const userInterests = userProfile.researchInterests;
+            
+            // Get user location (we'll prompt for this if not available)
+            let userLocation = userProfile.location || await promptForLocation();
+            
+            // Create ChatGPT prompt for finding real professors
+            const chatGPTPrompt = `Find 20 professors with research for me to do research in ${userField}. I live in ${userLocation}. 
+
+Search directory of universities near me that would offer me research in my topic: ${userInterests}.
+
+REQUIREMENTS:
+1. Focus on universities within 50 miles of ${userLocation}
+2. Include a few professors from each university you find (diversify the list)
+3. Prioritize smaller universities and state schools that are more likely to respond to high school students
+4. Include some larger universities but focus on professors who mentor students
+5. Only real professors with actual research in ${userField}
+6. Avoid household names - focus on lesser-known but excellent researchers
+
+FORMAT EACH PROFESSOR EXACTLY LIKE THIS:
+1. Dr. [Full Name] - [Title], [Department], [Full University Name]
+Research: [Specific research areas that match student interests]
+Email: [firstname.lastname@university.edu]
+Good for high school students: [Why they might be good - mentoring experience, outreach programs, etc.]
+
+IMPORTANT: 
+- Always include the full university name (e.g., "Princeton University", "Rutgers University", "University of Pennsylvania")
+- Include professors from multiple universities near ${userLocation}
+- Make sure each professor has real research that matches: ${userInterests}
+- Focus on professors who would actually respond to a high school student's research inquiry`;
+
+            try {
+                // Call ChatGPT API to find real professors
+                const professors = await callChatGPTForProfessors(chatGPTPrompt, userField, userInterests);
+                return professors;
+            } catch (error) {
+                console.error('Error calling ChatGPT for professors:', error);
+                throw new Error('Failed to find professors. Please try again.');
+            }
+        }
+
+        async function promptForLocation() {
+            // Create a modal to ask for user location
+            return new Promise((resolve) => {
+                const modal = document.createElement('div');
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.5);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 1000;
+                `;
+                
+                modal.innerHTML = `
+                    <div style="background: white; padding: 2rem; border-radius: 15px; max-width: 500px; width: 90%;">
+                        <h3>📍 Help us find professors near you</h3>
+                        <p>To find the best professors for your research, we need to know your location.</p>
+                        <input type="text" id="locationInput" placeholder="Enter your city, state, or region" 
+                               style="width: 100%; padding: 0.75rem; border: 2px solid #ddd; border-radius: 8px; margin: 1rem 0; font-size: 1rem;">
+                        <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                            <button id="locationSkipBtn" style="padding: 0.75rem 1.5rem; border: 1px solid #ddd; background: #f8f9fa; border-radius: 8px; cursor: pointer;">
+                                Skip
+                            </button>
+                            <button id="locationContinueBtn" style="padding: 0.75rem 1.5rem; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                                Continue
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                
+                // Add event listeners after modal is added to DOM
+                setTimeout(() => {
+                    console.log('Setting up event listeners...');
+                    // Focus on input
+                    const input = document.getElementById('locationInput');
+                    if (input) input.focus();
+                    
+                    const continueBtn = document.getElementById('locationContinueBtn');
+                    const skipBtn = document.getElementById('locationSkipBtn');
+                    console.log('Location continue button found:', continueBtn);
+                    console.log('Location skip button found:', skipBtn);
+                    
+                    // Handle Enter key
+                    input.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            const location = document.getElementById('locationInput').value.trim();
+                            if (location) {
+                                modal.remove();
+                                
+                                // Replace loading steps with activity indicator immediately
+                                const loadingSteps = document.querySelector('.loading-steps');
+                                if (loadingSteps) {
+                                    loadingSteps.innerHTML = `
+                                        <div class="activity-indicator">
+                                            <div class="activity-spinner">
+                                                <div class="spinner-ring"></div>
+                                                <div class="spinner-ring"></div>
+                                                <div class="spinner-ring"></div>
+                                            </div>
+                                            <div class="activity-text">
+                                                <div class="fun-fact" id="funFact">
+                                                    <span class="fact-icon">💡</span>
+                                                    <span id="factText">Did you know? 78% of college professors are open to mentoring high school students!</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `;
+                                }
+                                
+                                // Start dynamic loading animations
+                                setTimeout(() => {
+                                    startDynamicLoading();
+                                }, 100);
+                                
+                                resolve(location);
+                            } else {
+                                alert('Please enter your location to find nearby professors.');
+                            }
+                        }
+                    });
+                    
+                    // Add button event listeners
+                    document.getElementById('locationSkipBtn').addEventListener('click', function() {
+                        console.log('Skip button clicked!');
+                        modal.remove();
+                        
+                        // Replace loading steps with activity indicator immediately
+                        const loadingSteps = document.querySelector('.loading-steps');
+                        if (loadingSteps) {
+                            loadingSteps.innerHTML = `
+                                <div class="activity-indicator">
+                                    <div class="activity-spinner">
+                                        <div class="spinner-ring"></div>
+                                        <div class="spinner-ring"></div>
+                                        <div class="spinner-ring"></div>
+                                    </div>
+                                    <div class="activity-text">
+                                        <div class="fun-fact" id="funFact">
+                                            <span class="fact-icon">💡</span>
+                                            <span id="factText">Did you know? 78% of college professors are open to mentoring high school students!</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                        
+                        // Start dynamic loading animations
+                        setTimeout(() => {
+                            startDynamicLoading();
+                        }, 100);
+                        
+                        resolve('New York City');
+                    });
+                    
+                    document.getElementById('locationContinueBtn').addEventListener('click', function() {
+                        console.log('Continue button clicked!');
+                        const location = document.getElementById('locationInput').value.trim();
+                        console.log('Location value:', location);
+                        if (location) {
+                            console.log('Location is valid, proceeding...');
+                            modal.remove();
+                            
+                            // Replace loading steps with activity indicator immediately
+                            const loadingSteps = document.querySelector('.loading-steps');
+                            console.log('Loading steps element:', loadingSteps);
+                            if (loadingSteps) {
+                                loadingSteps.innerHTML = `
+                                    <div class="activity-indicator">
+                                        <div class="activity-spinner">
+                                            <div class="spinner-ring"></div>
+                                            <div class="spinner-ring"></div>
+                                            <div class="spinner-ring"></div>
+                                        </div>
+                                        <div class="activity-text">
+                                            <div class="fun-fact" id="funFact">
+                                                <span class="fact-icon">💡</span>
+                                                <span id="factText">Did you know? 78% of college professors are open to mentoring high school students!</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                                console.log('Activity indicator set');
+                                
+                                // Start dynamic loading animations
+                                setTimeout(() => {
+                                    startDynamicLoading();
+                                }, 100);
+                            }
+                            
+                            console.log('Resolving with location:', location);
+                            resolve(location);
+                        } else {
+                            console.log('Location is empty, showing alert');
+                            alert('Please enter your location to find nearby professors.');
+                        }
+                    });
+                }, 100);
+                
+
+            });
+        }
+
+        async function callChatGPTForProfessors(prompt, field, interests) {
+            try {
+
+                // Call actual ChatGPT API
+                const response = await callChatGPTAPI(prompt);
+                
+                // Parse the response and extract professors
+                const professors = parseChatGPTResponse(response);
+                
+                return professors;
+            } catch (error) {
+                console.error('ChatGPT API error:', error);
+                // Fallback to simulated response if API fails
+                const simulatedResponse = await simulateChatGPTResponse(field, interests);
+                const professors = parseChatGPTResponse(simulatedResponse);
+                return professors;
+            }
+        }
+
+        async function callChatGPTAPI(prompt) {
+            try {
+                console.log('🔍 Calling ChatGPT API with prompt:', prompt);
+                
+                // Fetch the API key from the external source
+                const apiKeyResponse = await fetch('https://api.npoint.io/fa7eb3de97c1f5c746a5/api_keys/openai');
+                const apiKey = await apiKeyResponse.text();
+                const cleanApiKey = apiKey.replace(/"/g, ''); // Remove quotes
+                
+                console.log('🔑 API Key retrieved successfully');
+                
+                // Make the actual ChatGPT API call
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${cleanApiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-4-turbo-preview', // Use the latest model
+                        messages: [
+                            {
+                                role: 'system',
+                                content: 'You are an expert at finding real professors for high school students. Always provide accurate, real professors with their actual research areas and universities. Format your response clearly with numbered entries. Make sure to include only real professors who actually exist and have research that matches the student\'s interests.'
+                            },
+                            {
+                                role: 'user',
+                                content: prompt
+                            }
+                        ],
+                        max_tokens: 3000,
+                        temperature: 0.3 // Lower temperature for more consistent results
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('❌ ChatGPT API Error:', errorData);
+                    throw new Error(`ChatGPT API error: ${errorData.error?.message || 'Unknown error'}`);
+                }
+
+                const data = await response.json();
+                console.log('🤖 ChatGPT API Response:', data);
+                
+                if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+                    throw new Error('Invalid response format from ChatGPT API');
+                }
+                
+                const content = data.choices[0].message.content;
+                console.log('📝 ChatGPT Response Content:', content);
+                
+                return content;
+                
+            } catch (error) {
+                console.error('❌ Error calling ChatGPT API:', error);
+                
+                // Fallback to simulation if API fails
+                console.log('🔄 Falling back to simulation...');
+                const fieldMatch = prompt.match(/for (\w+)/);
+                const interestsMatch = prompt.match(/Research Interests: ([^\n]+)/);
+                const locationMatch = prompt.match(/Location: ([^\n]+)/);
+                
+                const field = fieldMatch ? fieldMatch[1] : 'computer science';
+                const interests = interestsMatch ? interestsMatch[1] : 'machine learning';
+                const location = locationMatch ? locationMatch[1] : 'United States';
+                
+                console.log('📊 Extracted parameters for fallback:', { field, interests, location });
+                
+                const response = await simulateChatGPTResponse(field, interests);
+                console.log('🤖 Fallback Response:', response);
+                
+                return response;
+            }
+        }
+
+        async function simulateChatGPTResponse(field, interests) {
+            // This simulates what ChatGPT would return
+            // In production, replace this with actual ChatGPT API call
+            const fieldLower = field.toLowerCase();
+            const interestsLower = interests.toLowerCase();
+            
+            // Generate contextually relevant professors based on field and interests
+            const professors = [];
+            
+            if (fieldLower.includes('computer') || fieldLower.includes('ai') || fieldLower.includes('machine learning')) {
+                professors.push(
+                    "1. Dr. Sarah Mitchell - Assistant Professor, Computer Science, University of Vermont\nResearch: Machine Learning for Environmental Applications, Computer Vision\nEmail: sarah.mitchell@uvm.edu\nGood for high school students: Runs summer coding camps and actively mentors young researchers.",
+                    
+                    "2. Dr. James Chen - Associate Professor, Computer Science, Portland State University\nResearch: Natural Language Processing, Educational Technology\nEmail: james.chen@pdx.edu\nGood for high school students: Leads high school outreach program and has mentored 15+ high school students.",
+                    
+                    "3. Dr. Maria Rodriguez - Assistant Professor, Computer Science, University of New Mexico\nResearch: Data Science, Bioinformatics, AI Ethics\nEmail: maria.rodriguez@unm.edu\nGood for high school students: Participates in NM STEM outreach and welcomes student researchers.",
+                    
+                    "4. Dr. David Kim - Associate Professor, Computer Science, University of Maine\nResearch: Cybersecurity, Network Security, Privacy\nEmail: david.kim@maine.edu\nGood for high school students: Runs cybersecurity workshops for high school students.",
+                    
+                    "5. Dr. Lisa Thompson - Assistant Professor, Computer Science, Boise State University\nResearch: Human-Computer Interaction, User Experience Design\nEmail: lisa.thompson@boisestate.edu\nGood for high school students: Mentors through Girls Who Code and similar programs."
+                );
+            } else if (fieldLower.includes('biology') || fieldLower.includes('environmental')) {
+                professors.push(
+                    "1. Dr. Jennifer Park - Assistant Professor, Biology, University of Montana\nResearch: Conservation Biology, Wildlife Ecology, Climate Change Impacts\nEmail: jennifer.park@umontana.edu\nGood for high school students: Runs field research programs for high school students.",
+                    
+                    "2. Dr. Michael Wilson - Associate Professor, Environmental Science, University of Idaho\nResearch: Water Quality, Aquatic Ecology, Environmental Monitoring\nEmail: michael.wilson@uidaho.edu\nGood for high school students: Leads citizen science projects with local schools.",
+                    
+                    "3. Dr. Emily Davis - Assistant Professor, Biology, University of Wyoming\nResearch: Plant Ecology, Restoration Ecology, Climate Adaptation\nEmail: emily.davis@uwyo.edu\nGood for high school students: Participates in Wyoming Science Fair mentoring.",
+                    
+                    "4. Dr. Robert Garcia - Associate Professor, Environmental Science, New Mexico State University\nResearch: Soil Science, Agricultural Sustainability, Desert Ecology\nEmail: robert.garcia@nmsu.edu\nGood for high school students: Works with 4-H and FFA programs.",
+                    
+                    "5. Dr. Amanda Lee - Assistant Professor, Biology, University of Nevada, Reno\nResearch: Microbial Ecology, Bioremediation, Environmental Microbiology\nEmail: amanda.lee@unr.edu\nGood for high school students: Mentors through Nevada STEM programs."
+                );
+            } else if (fieldLower.includes('physics') || fieldLower.includes('astronomy')) {
+                professors.push(
+                    "1. Dr. Christopher Brown - Assistant Professor, Physics, University of Alaska Fairbanks\nResearch: Atmospheric Physics, Climate Modeling, Arctic Research\nEmail: christopher.brown@alaska.edu\nGood for high school students: Runs aurora research programs for students.",
+                    
+                    "2. Dr. Rachel Green - Associate Professor, Physics, University of Hawaii at Hilo\nResearch: Astrophysics, Stellar Evolution, Observational Astronomy\nEmail: rachel.green@hawaii.edu\nGood for high school students: Leads astronomy outreach at Mauna Kea observatories.",
+                    
+                    "3. Dr. Thomas Anderson - Assistant Professor, Physics, University of North Dakota\nResearch: Quantum Physics, Materials Science, Nanotechnology\nEmail: thomas.anderson@und.edu\nGood for high school students: Participates in ND Science Olympiad.",
+                    
+                    "4. Dr. Sarah Johnson - Associate Professor, Physics, University of South Dakota\nResearch: Particle Physics, Nuclear Physics, Medical Physics\nEmail: sarah.johnson@usd.edu\nGood for high school students: Mentors through SD science competitions.",
+                    
+                    "5. Dr. David Miller - Assistant Professor, Physics, University of Vermont\nResearch: Condensed Matter Physics, Renewable Energy Materials\nEmail: david.miller@uvm.edu\nGood for high school students: Works with VT STEM programs."
+                );
+                    } else {
+                // Generic professors for other fields
+                professors.push(
+                    "1. Dr. Jennifer Smith - Assistant Professor, Chemistry, University of Montana\nResearch: Green Chemistry, Sustainable Materials, Environmental Chemistry\nEmail: jennifer.smith@umontana.edu\nGood for high school students: Runs chemistry outreach programs.",
+                    
+                    "2. Dr. Michael Chen - Associate Professor, Engineering, University of Idaho\nResearch: Renewable Energy, Sustainable Engineering, Green Technology\nEmail: michael.chen@uidaho.edu\nGood for high school students: Mentors through engineering competitions.",
+                    
+                    "3. Dr. Lisa Wang - Assistant Professor, Mathematics, University of Wyoming\nResearch: Applied Mathematics, Mathematical Modeling, Statistics\nEmail: lisa.wang@uwyo.edu\nGood for high school students: Participates in math team coaching.",
+                    
+                    "4. Dr. Robert Kim - Associate Professor, Psychology, New Mexico State University\nResearch: Cognitive Psychology, Educational Psychology, Learning Sciences\nEmail: robert.kim@nmsu.edu\nGood for high school students: Works with psychology clubs and research programs.",
+                    
+                    "5. Dr. Amanda Garcia - Assistant Professor, Sociology, University of Nevada, Reno\nResearch: Environmental Sociology, Social Justice, Community Research\nEmail: amanda.garcia@unr.edu\nGood for high school students: Mentors through social science research programs."
+                );
+            }
+            
+            return professors.join('\n\n');
+        }
+
+        function cleanMarkdownFormatting(text) {
+            if (!text) return text;
+            
+            // Remove markdown formatting
+            return text
+                .replace(/\*\*(.*?)\*\*/g, '$1')  // Remove **bold** formatting
+                .replace(/\*(.*?)\*/g, '$1')      // Remove *italic* formatting
+                .replace(/`(.*?)`/g, '$1')        // Remove `code` formatting
+                .replace(/_(.*?)_/g, '$1')        // Remove _underline_ formatting
+                .replace(/~~(.*?)~~/g, '$1')      // Remove ~~strikethrough~~ formatting
+                .replace(/#{1,6}\s*/g, '')        // Remove markdown headers
+                .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')  // Remove markdown links, keep text
+                .trim();
+        }
+
+        function parseChatGPTResponse(response) {
+            console.log('🔍 Parsing ChatGPT response:', response);
+            
+            // Parse the ChatGPT response and extract professor information
+            const lines = response.split('\n');
+            const professors = [];
+            let currentProfessor = {};
+            
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                
+                if (line.match(/^\d+\./)) {
+                    // New professor entry
+                    if (Object.keys(currentProfessor).length > 0) {
+                        professors.push(currentProfessor);
+                    }
+                    currentProfessor = { id: professors.length + 1, selected: false };
+                    
+                    // Extract name, title, department, and university from the first line
+                    const fullLine = line.replace(/^\d+\.\s*/, '');
+                    console.log('🔍 Parsing line:', fullLine);
+                    
+                    // More robust parsing for the professor line
+                    const nameMatch = fullLine.match(/^Dr\.\s+([^-]+?)\s*-\s*(.+)$/);
+                    if (nameMatch) {
+                        currentProfessor.name = cleanMarkdownFormatting(nameMatch[1].trim());
+                        const detailsPart = nameMatch[2].trim();
+                        console.log('👤 Name:', currentProfessor.name);
+                        console.log('📋 Details part:', detailsPart);
+                        
+                        // Parse title, department, university from details
+                        const details = detailsPart.split(',').map(d => d.trim());
+                        console.log('🔍 Split details:', details);
+                        
+                        if (details.length >= 3) {
+                            currentProfessor.title = cleanMarkdownFormatting(details[0]);
+                            currentProfessor.department = cleanMarkdownFormatting(details[1]);
+                            currentProfessor.university = details[2];
+                        } else if (details.length === 2) {
+                            currentProfessor.title = cleanMarkdownFormatting(details[0]);
+                            currentProfessor.department = 'General';
+                            currentProfessor.university = details[1];
+                        } else if (details.length === 1) {
+                            currentProfessor.title = cleanMarkdownFormatting(details[0]);
+                            currentProfessor.department = 'General';
+                            currentProfessor.university = 'Unknown University';
+                        }
+                        
+                        // Clean up and validate university name
+                        if (currentProfessor.university) {
+                            let university = cleanMarkdownFormatting(currentProfessor.university)
+                                .replace(/\s+/g, ' ') // Remove extra spaces
+                                .replace(/^The\s+/i, '') // Remove "The" prefix
+                                .trim();
+                            
+                            // Handle common university name patterns
+                            if (university.toLowerCase().includes('university of')) {
+                                // Keep "University of X" format
+                                university = university.replace(/university\s+of\s+/i, 'University of ');
+                            } else if (university.toLowerCase().includes('state university')) {
+                                // Keep "X State University" format
+                                university = university.replace(/state\s+university/i, 'State University');
+                            } else if (university.toLowerCase().includes('university')) {
+                                // Keep existing university format
+                                university = university.replace(/university/i, 'University');
+                            } else if (university.toLowerCase().includes('college')) {
+                                // Keep existing college format
+                                university = university.replace(/college/i, 'College');
+                            } else if (university.toLowerCase().includes('institute')) {
+                                // Keep existing institute format
+                                university = university.replace(/institute/i, 'Institute');
+                } else {
+                                // If no university/college/institute found, try to extract from the full line
+                                const universityPatterns = [
+                                    /(?:at|from|,)\s+([^,]+?)(?:University|College|Institute|School)/i,
+                                    /([^,]+?)(?:University|College|Institute|School)/i
+                                ];
+                                
+                                for (const pattern of universityPatterns) {
+                                    const match = fullLine.match(pattern);
+                                    if (match) {
+                                        university = match[1].trim() + ' University';
+                                        break;
+                                    }
+                                }
+                                
+                                // If still no university found, use a fallback
+                                if (!university.includes('University') && 
+                                    !university.includes('College') && 
+                                    !university.includes('Institute')) {
+                                    university = university + ' University';
+                                }
+                            }
+                            
+                            currentProfessor.university = university;
+                            console.log('🏫 Final university:', currentProfessor.university);
+                        }
+                    } else {
+                        console.warn('⚠️ Could not parse professor line:', fullLine);
+                        // Fallback parsing
+                        const parts = fullLine.split(' - ');
+                        if (parts.length >= 2) {
+                            currentProfessor.name = cleanMarkdownFormatting(parts[0].trim());
+                            currentProfessor.title = 'Professor';
+                            currentProfessor.department = 'General';
+                            currentProfessor.university = parts[1].trim();
+                        }
+                    }
+                } else if (line.startsWith('Research:')) {
+                    currentProfessor.research = cleanMarkdownFormatting(line.replace('Research:', '').trim());
+                } else if (line.startsWith('Email:')) {
+                    currentProfessor.email = cleanMarkdownFormatting(line.replace('Email:', '').trim());
+                } else if (line.startsWith('Good for high school students:')) {
+                    currentProfessor.mentoringInfo = cleanMarkdownFormatting(line.replace('Good for high school students:', '').trim());
+                }
+            }
+            
+            // Add the last professor
+            if (Object.keys(currentProfessor).length > 0) {
+                professors.push(currentProfessor);
+            }
+            
+            console.log('📊 Parsed professors:', professors);
+            
+            // Validate and clean up professors
+            const validProfessors = professors.filter(prof => 
+                prof.name && prof.university && prof.research && prof.email
+            );
+            
+            console.log('✅ Valid professors found:', validProfessors.length);
+            
+            return validProfessors.slice(0, 8); // Return up to 8 professors
+        }
+
+        function replaceEmailVariables(text, professor, userProfile) {
+            try {
+                // Extract research area safely
+                const researchArea = professor.research ? 
+                    professor.research.split(',')[0].trim() : 
+                    'Research';
+                
+                // Extract last name safely
+                const lastName = professor.name ? 
+                    professor.name.split(' ').pop() : 
+                    'Professor';
+                
+                // Get user name with multiple fallbacks - check all possible field names
+                const userName = userProfile.displayName || 
+                               userProfile.name || 
+                               userProfile.fullName ||
+                               userProfile.firstName ||
+                               'Student';
+                
+                // Get school name with fallback
+                const schoolName = userProfile.schoolName || 
+                                 userProfile.school || 
+                                 userProfile.highSchool ||
+                                 'High School';
+                
+                // Get research interests with fallback
+                const researchInterests = userProfile.researchInterests || 
+                                        userProfile.interests || 
+                                        userProfile.researchAreas ||
+                                        'research';
+                
+                // Get university with fallback
+                const university = professor.university || 'University';
+                
+                return text
+                    .replace(/\[YourName\]/g, userName)
+                    .replace(/\[YourSchool\]/g, schoolName)
+                    .replace(/\[ResearchArea\]/g, researchArea)
+                    .replace(/\[Research Area\]/g, researchArea)  // Handle both with and without space
+                    .replace(/\[ResearchInterests\]/g, researchInterests)
+                    .replace(/\[University\]/g, university)
+                    .replace(/\[LastName\]/g, lastName);
+            } catch (error) {
+                console.error('Error replacing email variables:', error);
+                return text; // Return original text if replacement fails
+            }
+        }
+
+        async function generateEmailForProfessor(professor, userProfile, template) {
+            try {
+                // Use the robust variable replacement function
+                const subject = replaceEmailVariables(template.subject, professor, userProfile);
+                const body = replaceEmailVariables(template.body, professor, userProfile);
+
+
+
+                // Save email to Firebase
+                await saveEmailToFirebase(professor, userProfile, { subject, body });
+
+                return { subject, body };
+            } catch (error) {
+                console.error('Error generating email:', error);
+                // Fallback to basic email
+                return {
+                    subject: `Research Opportunity Inquiry - ${professor.research ? professor.research.split(',')[0].trim() : 'Research'}`,
+                    body: `Dear ${professor.name ? professor.name.split(' ').pop() : 'Professor'},\n\nI hope this email finds you well...`
+                };
+            }
+        }
+
+
+
+        async function saveEmailToFirebase(professor, userProfile, email) {
+            try {
+                const user = firebase.auth().currentUser;
+                if (!user) {
+                    console.log('User not authenticated, skipping Firebase save');
+                    return;
+                }
+
+                // Validate professor data before saving
+                if (!professor || !professor.name || !professor.university || !professor.research) {
+                    console.error('Invalid professor data:', professor);
+                    return;
+                }
+
+                const emailData = {
+                    userId: user.uid,
+                    professorId: professor.id || 'unknown',
+                    professorName: professor.name || 'Unknown Professor',
+                    professorUniversity: professor.university || 'Unknown University',
+                    professorResearch: professor.research || 'Unknown Research',
+                    studentName: userProfile.displayName || userProfile.name || 'Unknown Student',
+                    studentSchool: userProfile.schoolName || 'Unknown School',
+                    studentInterests: userProfile.researchInterests || 'Unknown Interests',
+                    emailSubject: email.subject || 'Research Inquiry',
+                    emailBody: email.body || 'No email content',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    status: 'draft'
+                };
+
+                console.log('Saving email data to Firebase:', emailData);
+                await firebase.firestore().collection('emails').add(emailData);
+                console.log('Email saved to Firebase successfully');
+            } catch (error) {
+                console.error('Error saving email to Firebase:', error);
+                console.error('Professor data:', professor);
+                console.error('User profile:', userProfile);
+            }
+        }
+
+        function generateRandomName() {
+            const firstNames = ['Sarah', 'Michael', 'Jennifer', 'David', 'Emily', 'James', 'Jessica', 'Robert', 'Amanda', 'Christopher'];
+            const lastNames = ['Johnson', 'Smith', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez'];
+            
+            const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+            const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+            
+            return `${firstName} ${lastName}`;
+        }
+
+        function displayProfessors() {
+            const grid = document.getElementById('professorsGrid');
+            const userProfile = JSON.parse(localStorage.getItem('userProfile'));
+
+            grid.innerHTML = professors.map(professor => `
+                <div class="professor-card ${professor.selected ? 'selected' : ''}">
+                    <div class="professor-header" onclick="toggleProfessor(${professor.id})">
+                        <div class="professor-info">
+                            <h3>${professor.name}</h3>
+                            <p class="university">${professor.university}</p>
+                            <p class="research">${professor.research}</p>
+                        </div>
+                        <div class="selection-indicator">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="email-preview-section">
+                        <div class="email-header" onclick="toggleEmailPreview(${professor.id}, event)">
+                            <span class="email-subject">View Email</span>
+                            <div class="expand-indicator">
+                                <i class="fas fa-chevron-down"></i>
+                                <span>Click to view email</span>
+                            </div>
+                        </div>
+                        <div class="email-content" id="email-${professor.id}" style="display: none;">
+                            <div class="email-body">
+                                ${professor.email.body.replace(/\n/g, '<br>')}
+                            </div>
+                            <div class="email-subject-preview">
+                                <strong>Subject:</strong> ${professor.email.subject}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+                    updateSelectionCounter();
+        }
+
+        function toggleProfessor(professorId) {
+            console.log('🔄 Toggling professor with ID:', professorId);
+            console.log('Available professors:', professors.map(p => ({ id: p.id, name: p.name, selected: p.selected })));
+            
+            const professor = professors.find(p => p.id === professorId);
+            if (professor) {
+                professor.selected = !professor.selected;
+                console.log(`✅ Toggled professor ${professor.name} to selected: ${professor.selected}`);
+                displayProfessors();
+                updateContinueButton();
+            } else {
+                console.error('❌ Professor not found with ID:', professorId);
+                console.log('Available professor IDs:', professors.map(p => p.id));
+            }
+        }
+
+        function toggleEmailPreview(professorId, event) {
+            event.stopPropagation();
+            const emailContent = document.getElementById(`email-${professorId}`);
+            const expandIndicator = event.currentTarget.querySelector('.expand-indicator');
+            
+            if (emailContent.style.display === 'none') {
+                emailContent.style.display = 'block';
+                expandIndicator.innerHTML = '<i class="fas fa-chevron-up"></i><span>Click to hide email</span>';
+                } else {
+                emailContent.style.display = 'none';
+                expandIndicator.innerHTML = '<i class="fas fa-chevron-down"></i><span>Click to view email</span>';
+            }
+        }
+
+            function updateSelectionCounter() {
+            const selectedCount = professors.filter(p => p.selected).length;
+            document.getElementById('selectedCount').textContent = selectedCount;
+            document.getElementById('totalCount').textContent = professors.length;
+        }
+
+                function updateContinueButton() {
+            const selectedCount = professors.filter(p => p.selected).length;
+            const continueBtn = document.getElementById('continueBtn');
+            const counterHint = document.querySelector('.counter-hint');
+            
+            if (selectedCount > 0) {
+                continueBtn.disabled = false;
+                continueBtn.textContent = `Continue to Checkout (${selectedCount} selected)`;
+                if (counterHint) {
+                    counterHint.textContent = `Great! You've selected ${selectedCount} professor${selectedCount > 1 ? 's' : ''}. Click continue to proceed.`;
+                }
+                    } else {
+                continueBtn.disabled = true;
+                continueBtn.textContent = 'Select Professors to Continue';
+                if (counterHint) {
+                    counterHint.textContent = 'Please select at least one professor to continue to checkout';
+                }
+            }
+        }
+
+                async function goToCheckout() {
+            console.log('🚀 Starting checkout process...');
+            console.log('All professors:', professors);
+            
+            const selectedProfessors = professors.filter(p => p.selected);
+            console.log('Selected professors for checkout:', selectedProfessors);
+            
+            if (selectedProfessors.length === 0) {
+                console.log('⚠️ No professors selected for checkout');
+                // Show a more user-friendly message
+                const counterHint = document.querySelector('.counter-hint');
+                if (counterHint) {
+                    counterHint.textContent = '⚠️ Please select at least one professor to continue';
+                    counterHint.style.color = '#dc3545';
+                    setTimeout(() => {
+                        counterHint.textContent = 'Select professors to generate personalized emails';
+                        counterHint.style.color = '#000000';
+                    }, 3000);
+                }
+                return;
+            }
+
+            try {
+                // Show loading state
+                const continueBtn = document.getElementById('continueBtn');
+                const originalText = continueBtn.textContent;
+                continueBtn.textContent = 'Saving selections...';
+                continueBtn.disabled = true;
+                
+                console.log('💾 Saving selected professors to Firebase...');
+                // Save selected professors to Firebase
+                await saveSelectedProfessorsToFirebase();
+                console.log('✅ Firebase save completed successfully');
+                
+                // Permanently mark that professors have been generated (both session and local storage)
+
+                
+            localStorage.setItem('selectedProfessors', JSON.stringify(selectedProfessors));
+                console.log('✅ All storage updated - professors permanently saved');
+                console.log('🔄 Redirecting to checkout...');
+                window.location.href = 'checkout.html';
+            } catch (error) {
+                console.error('❌ Error in checkout process:', error);
+                
+                // Reset button state
+                const continueBtn = document.getElementById('continueBtn');
+                continueBtn.textContent = `Continue to Checkout (${selectedProfessors.length} selected)`;
+                continueBtn.disabled = false;
+                
+                alert('Error saving your selections. Please try again. Error: ' + error.message);
+            }
+        }
+
+
+
+        async function saveSelectedProfessorsToFirebase() {
+            const user = firebase.auth().currentUser;
+            if (!user) {
+                console.log('❌ User not authenticated, skipping Firebase save');
+                throw new Error('User not authenticated');
+            }
+
+            const selectedProfessors = professors.filter(p => p.selected);
+            console.log('🔍 Selected professors to save:', selectedProfessors);
+            
+            if (selectedProfessors.length === 0) {
+                console.log('⚠️ No professors selected, skipping save');
+                return;
+            }
+
+            const userProfile = JSON.parse(localStorage.getItem('userProfile'));
+            console.log('👤 User profile for save:', userProfile);
+
+            try {
+                // Create a unique document ID for this selection
+                const selectionId = `selection_${user.uid}_${Date.now()}`;
+                
+                // Save to user's selected professors collection
+                const selectedData = {
+                    userId: user.uid,
+                    userEmail: user.email,
+                    selectionId: selectionId,
+                    selectedProfessors: selectedProfessors.map(prof => ({
+                        id: prof.id || `prof_${Date.now()}_${Math.random()}`,
+                        name: prof.name,
+                        university: prof.university || 'Unknown University',
+                        department: prof.department || 'General',
+                        research: prof.research || 'General Research',
+                        email: prof.email || 'unknown@university.edu',
+                        selected: true
+                    })),
+                    userField: userProfile.fieldOfInterest,
+                    userInterests: userProfile.researchInterests,
+                    userLocation: userProfile.location || 'Unknown Location',
+                    userDisplayName: userProfile.displayName,
+                    userSchool: userProfile.schoolName,
+                    totalSelected: selectedProfessors.length,
+                    selectedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    status: 'pending'
+                };
+
+                console.log('💾 Saving to Firebase:', selectedData);
+
+                // Save with a specific document ID
+                await firebase.firestore().collection('selectedProfessors').doc(selectionId).set(selectedData);
+                console.log('✅ Selected professors saved to Firebase with ID:', selectionId);
+                
+                // Also save to user's document for easy access
+                await firebase.firestore().collection('users').doc(user.uid).update({
+                    lastSelection: {
+                        selectionId: selectionId,
+                        totalSelected: selectedProfessors.length,
+                        selectedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    }
+                });
+                console.log('✅ User document updated with selection info');
+                
+            } catch (error) {
+                console.error('❌ Error saving selected professors to Firebase:', error);
+                console.error('Error details:', error.message, error.code);
+                throw error;
+            }
+        }
+
+
+
+        // Template Editor Functions
+        function openTemplateEditor() {
+            // Load current template into editor
+            document.getElementById('emailSubject').value = emailTemplate.subject;
+            document.getElementById('emailBody').value = emailTemplate.body;
+            document.getElementById('templateModal').classList.add('active');
+        }
+
+        function closeTemplateEditor() {
+            document.getElementById('templateModal').classList.remove('active');
+        }
+
+        function insertVariable(variable) {
+            const textarea = document.getElementById('emailBody');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const text = textarea.value;
+            
+            textarea.value = text.substring(0, start) + variable + text.substring(end);
+            textarea.focus();
+            textarea.setSelectionRange(start + variable.length, start + variable.length);
+        }
+
+        function previewTemplate() {
+            const subject = document.getElementById('emailSubject').value;
+            const body = document.getElementById('emailBody').value;
+            const userProfile = JSON.parse(localStorage.getItem('userProfile'));
+
+            if (professors.length === 0) {
+                alert('Please generate professors first to preview the template.');
+                return;
+            }
+
+            // Generate preview with first professor using the same robust replacement
+            const professor = professors[0];
+            const previewSubject = replaceEmailVariables(subject, professor, userProfile);
+            const previewBody = replaceEmailVariables(body, professor, userProfile);
+
+            document.getElementById('previewBody').innerHTML = `
+                <div class="preview-email">
+                    <div class="preview-subject">
+                        <strong>Subject:</strong> ${previewSubject}
+                    </div>
+                    <div class="preview-content">
+                        ${previewBody.replace(/\n/g, '<br>')}
+                    </div>
+                    <div class="preview-note">
+                        <small>This is a preview using the first professor. All emails will be personalized with their specific information.</small>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('previewModal').classList.add('active');
+        }
+
+        function closePreview() {
+            document.getElementById('previewModal').classList.remove('active');
+        }
+
+        async function applyTemplate() {
+            const subject = document.getElementById('emailSubject').value;
+            const body = document.getElementById('emailBody').value;
+            
+            // Update template
+            emailTemplate = { subject, body };
+            
+            // Save template to Firebase
+            const user = firebase.auth().currentUser;
+            if (user) {
+                try {
+                    await firebase.firestore().collection('users').doc(user.uid).update({
+                        emailTemplate: emailTemplate
+                    });
+                } catch (error) {
+                    console.error('Error saving template to Firebase:', error);
+                }
+            }
+            
+            // Regenerate emails for all professors
+            const userProfile = JSON.parse(localStorage.getItem('userProfile'));
+            for (let professor of professors) {
+                professor.email = await generateEmailForProfessor(professor, userProfile, emailTemplate);
+            }
+            
+            // Redisplay professors with new emails
+            displayProfessors();
+            
+            // Close modal
+            closeTemplateEditor();
+            
+            // Show success message
+            showNotification('Email template updated and applied to all professors!', 'success');
+        }
+
+        async function resetTemplate() {
+            const defaultSubject = 'Research Opportunity Inquiry - [ResearchArea]';
+            const defaultBody = `Dear Professor [LastName],
+
+I hope this email finds you well. My name is [YourName], and I am a high school student with a strong interest in [ResearchArea] research.
+
+I recently came across your work at [University] and was particularly impressed by your research in [ResearchArea]. Your publications on [ResearchInterests] have been incredibly inspiring to my academic journey.
+
+I am reaching out to inquire about potential research opportunities in your laboratory. I am particularly interested in [ResearchInterests] and would be eager to contribute to ongoing projects or discuss potential areas of collaboration.
+
+I have attached my resume and would be happy to provide any additional materials you might need. I am flexible with my schedule and would be willing to start immediately.
+
+Thank you for considering my application. I look forward to hearing from you.
+
+Best regards,
+[YourName]
+[YourSchool]`;
+
+            document.getElementById('emailSubject').value = defaultSubject;
+            document.getElementById('emailBody').value = defaultBody;
+            
+            // Update template
+            emailTemplate = { subject: defaultSubject, body: defaultBody };
+            
+            // Save to Firebase
+            const user = firebase.auth().currentUser;
+            if (user) {
+                try {
+                    await firebase.firestore().collection('users').doc(user.uid).update({
+                        emailTemplate: emailTemplate
+                    });
+                } catch (error) {
+                    console.error('Error saving template to Firebase:', error);
+                }
+            }
+            
+            showNotification('Template reset to default!', 'info');
+        }
+
+
+
+        async function regenerateAllEmails() {
+            const userProfile = JSON.parse(localStorage.getItem('userProfile'));
+            
+            for (let professor of professors) {
+                professor.email = await generateEmailForProfessor(professor, userProfile, emailTemplate);
+            }
+            
+            displayProfessors();
+            showNotification('All emails regenerated successfully!', 'success');
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <span class="notification-message">${message}</span>
+                    <button class="notification-close" onclick="this.parentElement.parentElement.remove()">&times;</button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Show notification
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 3000);
+        }
+
+        // Close modals when clicking outside
+        document.getElementById('templateModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeTemplateEditor();
+            }
+        });
+
+        document.getElementById('previewModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePreview();
+            }
+        });
+
+        // Close modals with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeTemplateEditor();
+                closePreview();
+            }
+        });
+
+        // Dynamic Loading Functions
+        let loadingInterval;
+        let factInterval;
+        let timeInterval;
+        let startTime;
+
+        function startDynamicLoading() {
+            // Start cycling fun facts
+            startFunFacts();
+        }
+
+        function startFunFacts() {
+            const facts = [
+                
+                "Fun fact: Students who do research in high school are 3x more likely to get into top colleges!",
+                "Interesting: 92% of professors say they enjoy working with motivated high school students!",
+                "Cool stat: Research experience can boost your college application by up to 40%!",
+                "Did you know? Many Nobel Prize winners started their research journey in high school!",
+                "Fun fact: Universities actively seek students with research experience!",
+                "Interesting: Research skills are the #1 thing colleges look for in applicants!",
+                "Cool stat: Students with research experience earn 25% more in college scholarships!",
+                "Did you know? Many professors started their own research in high school!",
+                "Fun fact: Research experience shows colleges you're ready for advanced learning!",
+                "Amazing: High school researchers often get published in scientific journals!",
+                "Cool fact: Research experience can help you discover your passion early!",
+                "Did you know? Many successful scientists credit their high school research mentors!",
+                "Fun stat: Students with research experience are more confident in college!",
+                "Interesting: Research projects can lead to amazing networking opportunities!"
+            ];
+            
+            let factIndex = 0;
+            const factElement = document.getElementById('factText');
+            const factContainer = document.getElementById('funFact');
+            
+            if (factElement && factContainer) {
+                factInterval = setInterval(() => {
+                    // Fade out
+                    factContainer.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        factElement.textContent = facts[factIndex];
+                        factIndex = (factIndex + 1) % facts.length;
+                        
+                        // Fade in
+                        factContainer.style.opacity = '1';
+                    }, 300);
+                }, 4000); // Change fact every 4 seconds
+            }
+        }
+
+        function startTimeUpdates() {
+            const timeElement = document.getElementById('estimatedTime');
+            const timeContainer = document.querySelector('.estimated-time');
+            
+            if (timeElement && timeContainer) {
+                timeInterval = setInterval(() => {
+                    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                    const remaining = Math.max(0, 180 - elapsed); // 3 minutes total
+                    
+                    if (remaining > 120) {
+                        timeElement.textContent = `Estimated: 2-3 minutes`;
+                    } else if (remaining > 60) {
+                        timeElement.textContent = `Estimated: 1-2 minutes`;
+                    } else if (remaining > 30) {
+                        timeElement.textContent = `Estimated: 30-60 seconds`;
+                    } else if (remaining > 0) {
+                        timeElement.textContent = `Almost done! ${remaining}s remaining`;
+                        timeContainer.style.color = '#28a745';
+        } else {
+                        timeElement.textContent = `Taking longer than expected...`;
+                        timeContainer.style.color = '#ffc107';
+                    }
+                }, 1000);
+            }
+        }
+
+        function startStatusUpdates() {
+            const statusMessages = [
+                "Searching universities and matching research interests...",
+                "Analyzing professor research areas and publications...",
+                "Finding professors who actively mentor students...",
+                "Checking university locations and accessibility...",
+                "Matching your interests with current research projects...",
+                "Verifying professor contact information...",
+                "Preparing personalized email templates...",
+                "Finalizing your perfect professor matches..."
+            ];
+            
+            let statusIndex = 0;
+            const statusElement = document.getElementById('loadingStatus');
+            
+            if (statusElement) {
+                loadingInterval = setInterval(() => {
+                    statusElement.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        statusElement.textContent = statusMessages[statusIndex];
+                        statusElement.style.opacity = '1';
+                        statusIndex = (statusIndex + 1) % statusMessages.length;
+                    }, 200);
+                }, 3000); // Change status every 3 seconds
+            }
+        }
+
+        function stopDynamicLoading() {
+            if (factInterval) clearInterval(factInterval);
+        }
+    </script>
+</body>
+</html> 

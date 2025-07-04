@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Writing - Oppfinity</title>
+    <link rel="icon" type="image/png" href="opp-logo.png">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="opp-logo.png" alt="Oppfinity Logo" class="logo-img">
+            <h1>Oppfinity</h1>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="index.html#userDashboard" class="back-btn">← Back to Dashboard</a>
+        </div>
+    </nav>
+
+    <div class="email-writing-container">
+        <div class="email-writing-content">
+            <div class="loading-section">
+                <div class="loading-animation">
+                    <div class="loading-spinner"></div>
+                </div>
+                <h2>Generating Your Personalized Emails</h2>
+                <p>We're crafting the perfect emails for your selected professors...</p>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <div class="loading-steps">
+                    <div class="step active">
+                        <span class="step-icon">📝</span>
+                        <span class="step-text">Analyzing professor research</span>
+                    </div>
+                    <div class="step">
+                        <span class="step-icon">🎯</span>
+                        <span class="step-text">Personalizing content</span>
+                    </div>
+                    <div class="step">
+                        <span class="step-icon">📧</span>
+                        <span class="step-text">Generating emails</span>
+                    </div>
+                    <div class="step">
+                        <span class="step-icon">✅</span>
+                        <span class="step-text">Finalizing drafts</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Email Template Editor Modal -->
+    <div class="template-modal" id="templateModal">
+        <div class="template-content">
+            <div class="template-header">
+                <h2>Edit Email Template</h2>
+                <button class="close-template" onclick="closeTemplateEditor()">&times;</button>
+            </div>
+            
+            <div class="template-body">
+                <div class="template-section">
+                    <label for="emailSubject">Email Subject</label>
+                    <input type="text" id="emailSubject" placeholder="Research Opportunity Inquiry - [Research Area]" value="Research Opportunity Inquiry - [Research Area]">
+                </div>
+                
+                <div class="template-section">
+                    <label for="emailBody">Email Body</label>
+                    <textarea id="emailBody" rows="12" placeholder="Enter your email template...">Dear Professor [LastName],
+
+I hope this email finds you well. My name is [YourName], and I am a high school student with a strong interest in [ResearchArea] research.
+
+I recently came across your work at [University] and was particularly impressed by your research in [ResearchArea]. Your publications on [ResearchInterests] have been incredibly inspiring to my academic journey.
+
+I am reaching out to inquire about potential research opportunities in your laboratory. I am particularly interested in [ResearchInterests] and would be eager to contribute to ongoing projects or discuss potential areas of collaboration.
+
+I have attached my resume and would be happy to provide any additional materials you might need. I am flexible with my schedule and would be willing to start immediately.
+
+Thank you for considering my application. I look forward to hearing from you.
+
+Best regards,
+[YourName]
+[YourSchool]</textarea>
+                </div>
+                
+                <div class="template-variables">
+                    <h4>Available Variables</h4>
+                    <div class="variable-grid">
+                        <span class="variable" onclick="insertVariable('[YourName]')">[YourName]</span>
+                        <span class="variable" onclick="insertVariable('[YourSchool]')">[YourSchool]</span>
+                        <span class="variable" onclick="insertVariable('[ResearchArea]')">[ResearchArea]</span>
+                        <span class="variable" onclick="insertVariable('[ResearchInterests]')">[ResearchInterests]</span>
+                        <span class="variable" onclick="insertVariable('[University]')">[University]</span>
+                        <span class="variable" onclick="insertVariable('[LastName]')">[LastName]</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="template-actions">
+                <button class="preview-btn" onclick="previewTemplate()">
+                    <i class="fas fa-eye"></i>
+                    Preview
+                </button>
+                <button class="apply-btn" onclick="applyTemplate()">
+                    <i class="fas fa-check"></i>
+                    Apply to All Emails
+                </button>
+                <button class="reset-btn" onclick="resetTemplate()">
+                    <i class="fas fa-undo"></i>
+                    Reset
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Template Preview Modal -->
+    <div class="preview-modal" id="previewModal">
+        <div class="preview-content">
+            <div class="preview-header">
+                <h3>Email Preview</h3>
+                <button class="close-preview" onclick="closePreview()">&times;</button>
+            </div>
+            <div class="preview-body" id="previewBody">
+                <!-- Preview content will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Oppfinity</h3>
+                <p>Connecting students with research opportunities</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <a href="index.html">Home</a>
+                <a href="professor-matching.html">Professor Matching</a>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p>Email: rarora2025@gmail.com</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Oppfinity. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        // Check if user has selected professors
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectedProfessors = localStorage.getItem('selectedProfessors');
+            if (!selectedProfessors) {
+                // Redirect back to professor matching if no professors selected
+                window.location.href = 'professor-matching.html';
+                return;
+            }
+
+            // Parse selected professors
+            const professors = JSON.parse(selectedProfessors);
+            console.log('Selected professors for email generation:', professors);
+
+            // Simulate loading process
+            simulateLoading();
+        });
+
+        function simulateLoading() {
+            const steps = document.querySelectorAll('.loading-steps .step');
+            const progressFill = document.querySelector('.progress-fill');
+            let currentStep = 0;
+
+            const interval = setInterval(() => {
+                if (currentStep < steps.length) {
+                    // Update progress bar
+                    const progress = ((currentStep + 1) / steps.length) * 100;
+                    progressFill.style.width = progress + '%';
+
+                    // Update active step
+                    steps.forEach((step, index) => {
+                        if (index <= currentStep) {
+                            step.classList.add('active');
+                        } else {
+                            step.classList.remove('active');
+                        }
+                    });
+
+                    currentStep++;
+                } else {
+                    clearInterval(interval);
+                    // Loading complete - you can redirect to the actual email writing interface here
+                    setTimeout(() => {
+                        document.querySelector('.loading-section').innerHTML = `
+                            <div class="completion-message">
+                                <div class="completion-icon">✅</div>
+                                <h2>Emails Generated Successfully!</h2>
+                                <p>Your personalized emails are ready to be sent to ${JSON.parse(localStorage.getItem('selectedProfessors')).length} professors.</p>
+                                <button class="view-emails-btn" onclick="viewEmails()">View Generated Emails</button>
+                            </div>
+                        `;
+                    }, 1000);
+                }
+            }, 2000); // Change step every 2 seconds
+        }
+
+        function viewEmails() {
+            const selectedProfessors = JSON.parse(localStorage.getItem('selectedProfessors'));
+            
+            // Get user profile data from localStorage or use defaults
+            const userProfile = JSON.parse(localStorage.getItem('userProfile')) || {
+                name: '[Your Name]',
+                schoolName: '[Your School]',
+                fieldOfInterest: 'Computer Science',
+                researchInterests: 'AI and Machine Learning'
+            };
+            
+            document.querySelector('.loading-section').innerHTML = `
+                <div class="emails-display">
+                    <div style="text-align: center; margin-bottom: 2rem;">
+                        <button class="checkout-btn" onclick="goToCheckout()" style="margin-bottom: 1rem;">
+                            <i class="fas fa-credit-card"></i>
+                            Continue to Checkout
+                        </button>
+                        <p style="color: #666; font-size: 0.9rem;">Choose your plan and start connecting with professors</p>
+                    </div>
+                    
+                    <h2>Your Generated Emails</h2>
+                    <p class="emails-subtitle">Personalized emails ready to send to your selected professors</p>
+                    
+                    <div class="preview-notice">
+                        📧 <strong>Preview Mode:</strong> These are sample emails generated based on your profile. 
+                        Choose a plan to send personalized emails to professors.
+                    </div>
+                    
+
+                    
+                    <div class="email-actions">
+                        <button class="edit-template-btn" onclick="openTemplateEditor()">
+                            <i class="fas fa-edit"></i>
+                            Edit Email Template
+                        </button>
+                        <p class="template-hint">Customize your email template for all professors at once</p>
+                    </div>
+                    
+                    <div class="emails-container">
+                        ${selectedProfessors.map((professor, index) => `
+                            <div class="email-card">
+                                <div class="email-header">
+                                    <div class="professor-info">
+                                        <h3 style="color: white;">${professor.name}</h3>
+                                        <p class="university" style="color: white;">${professor.university}</p>
+                                        <p class="research" style="color: white;">${professor.research}</p>
+                                    </div>
+                                    <div class="email-status">
+                                        <span class="status-badge">Ready to Send</span>
+                                    </div>
+                                </div>
+                                <div class="email-content">
+                                    <div class="email-preview">
+                                        <p><strong>Subject:</strong> Research Opportunity Inquiry - ${professor.research.split(',')[0]}</p>
+                                        <div class="email-body">
+                                            <p>Dear Professor ${professor.name.split(' ').pop()},</p>
+                                            
+                                            <p>I hope this email finds you well. My name is ${userProfile.name}, and I am a high school student with a strong interest in ${professor.research.split(',')[0].toLowerCase()} research.</p>
+                                            
+                                            <p>I recently came across your work at ${professor.university} and was particularly impressed by your research in ${professor.research.toLowerCase()}. Your publications on ${userProfile.researchInterests.toLowerCase()} have been incredibly inspiring to my academic journey.</p>
+                                            
+                                            <p>I am reaching out to inquire about potential research opportunities in your laboratory. I am particularly interested in ${userProfile.researchInterests.toLowerCase()} and would be eager to contribute to ongoing projects or discuss potential areas of collaboration.</p>
+                                            
+                                            <p>I have attached my resume and would be happy to provide any additional materials you might need. I am flexible with my schedule and would be willing to start immediately.</p>
+                                            
+                                            <p>Thank you for considering my application. I look forward to hearing from you.</p>
+                                            
+                                            <p>Best regards,<br>
+                                            ${userProfile.name}<br>
+                                            ${userProfile.schoolName}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="email-summary">
+                        <div class="summary-stats">
+                            <div class="stat">
+                                <span class="stat-number">${selectedProfessors.length}</span>
+                                <span class="stat-label">Professors</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number">18%</span>
+                                <span class="stat-label">Success Rate</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number">5-10 days</span>
+                                <span class="stat-label">Response Time</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="premium-promo">
+                        <div class="promo-content">
+                            <h3>🚨 Only 18% Response Rate with Free Plan</h3>
+                            <p><strong>Upgrade to Premium for 4x Better Results!</strong> With <strong>Oppfinity Premium</strong>, we'll reach out to you and compile a larger database personalized to you with professors we've tested before. These professors have proven response rates and are more likely to engage with students.</p>
+                            <div class="promo-benefits">
+                                <div class="promo-benefit">
+                                    <span class="promo-benefit-icon">📈</span>
+                                    <span>75%+ Response Rate</span>
+                                </div>
+                                <div class="promo-benefit">
+                                    <span class="promo-benefit-icon">🎯</span>
+                                    <span>Tested Professors</span>
+                                </div>
+                            </div>
+                            <button class="promo-btn" onclick="goToCheckout()">
+                                <i class="fas fa-rocket"></i>
+                                Upgrade to Premium - $15
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="continue-section">
+                        <button class="checkout-btn" onclick="goToCheckout()">
+                            <i class="fas fa-credit-card"></i>
+                            Continue to Checkout
+                        </button>
+                        <p class="continue-hint">Choose your plan and start connecting with professors</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function goToCheckout() {
+            window.location.href = 'checkout.html';
+        }
+
+        // Template Editor Functions
+        function openTemplateEditor() {
+            document.getElementById('templateModal').classList.add('active');
+        }
+
+        function closeTemplateEditor() {
+            document.getElementById('templateModal').classList.remove('active');
+        }
+
+        function insertVariable(variable) {
+            const textarea = document.getElementById('emailBody');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const text = textarea.value;
+            
+            textarea.value = text.substring(0, start) + variable + text.substring(end);
+            textarea.focus();
+            textarea.setSelectionRange(start + variable.length, start + variable.length);
+        }
+
+        function previewTemplate() {
+            const subject = document.getElementById('emailSubject').value;
+            const body = document.getElementById('emailBody').value;
+            const selectedProfessors = JSON.parse(localStorage.getItem('selectedProfessors'));
+            const userProfile = JSON.parse(localStorage.getItem('userProfile')) || {
+                name: '[Your Name]',
+                schoolName: '[Your School]',
+                fieldOfInterest: 'Computer Science',
+                researchInterests: 'AI and Machine Learning'
+            };
+
+            // Generate preview with first professor
+            const professor = selectedProfessors[0];
+            const previewSubject = subject
+                .replace('[ResearchArea]', professor.research.split(',')[0])
+                .replace('[ResearchInterests]', userProfile.researchInterests);
+
+            const previewBody = body
+                .replace('[YourName]', userProfile.name)
+                .replace('[YourSchool]', userProfile.schoolName)
+                .replace('[ResearchArea]', professor.research.split(',')[0])
+                .replace('[ResearchInterests]', userProfile.researchInterests)
+                .replace('[University]', professor.university)
+                .replace('[LastName]', professor.name.split(' ').pop());
+
+            document.getElementById('previewBody').innerHTML = `
+                <div class="preview-email">
+                    <div class="preview-subject">
+                        <strong>Subject:</strong> ${previewSubject}
+                    </div>
+                    <div class="preview-content">
+                        ${previewBody.replace(/\n/g, '<br>')}
+                    </div>
+                    <div class="preview-note">
+                        <small>This is a preview using the first professor. All emails will be personalized with their specific information.</small>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('previewModal').classList.add('active');
+        }
+
+        function closePreview() {
+            document.getElementById('previewModal').classList.remove('active');
+        }
+
+        function applyTemplate() {
+            const subject = document.getElementById('emailSubject').value;
+            const body = document.getElementById('emailBody').value;
+            
+            // Store template in localStorage
+            localStorage.setItem('emailTemplate', JSON.stringify({ subject, body }));
+            
+            // Regenerate emails with new template
+            regenerateEmailsWithTemplate(subject, body);
+            
+            // Close modal
+            closeTemplateEditor();
+            
+            // Show success message
+            showNotification('Email template applied successfully!', 'success');
+        }
+
+        function resetTemplate() {
+            document.getElementById('emailSubject').value = 'Research Opportunity Inquiry - [Research Area]';
+            document.getElementById('emailBody').value = `Dear Professor [LastName],
+
+I hope this email finds you well. My name is [YourName], and I am a high school student with a strong interest in [ResearchArea] research.
+
+I recently came across your work at [University] and was particularly impressed by your research in [ResearchArea]. Your publications on [ResearchInterests] have been incredibly inspiring to my academic journey.
+
+I am reaching out to inquire about potential research opportunities in your laboratory. I am particularly interested in [ResearchInterests] and would be eager to contribute to ongoing projects or discuss potential areas of collaboration.
+
+I have attached my resume and would be happy to provide any additional materials you might need. I am flexible with my schedule and would be willing to start immediately.
+
+Thank you for considering my application. I look forward to hearing from you.
+
+Best regards,
+[YourName]
+[YourSchool]`;
+        }
+
+        function regenerateEmailsWithTemplate(subject, body) {
+            const selectedProfessors = JSON.parse(localStorage.getItem('selectedProfessors'));
+            const userProfile = JSON.parse(localStorage.getItem('userProfile')) || {
+                name: '[Your Name]',
+                schoolName: '[Your School]',
+                fieldOfInterest: 'Computer Science',
+                researchInterests: 'AI and Machine Learning'
+            };
+
+            const emailsContainer = document.querySelector('.emails-container');
+            emailsContainer.innerHTML = selectedProfessors.map((professor, index) => {
+                const personalizedSubject = subject
+                    .replace('[ResearchArea]', professor.research.split(',')[0])
+                    .replace('[ResearchInterests]', userProfile.researchInterests);
+
+                const personalizedBody = body
+                    .replace('[YourName]', userProfile.name)
+                    .replace('[YourSchool]', userProfile.schoolName)
+                    .replace('[ResearchArea]', professor.research.split(',')[0])
+                    .replace('[ResearchInterests]', userProfile.researchInterests)
+                    .replace('[University]', professor.university)
+                    .replace('[LastName]', professor.name.split(' ').pop());
+
+                return `
+                    <div class="email-card">
+                        <div class="email-header">
+                            <div class="professor-info">
+                                <h3 style="color: white;">${professor.name}</h3>
+                                <p class="university" style="color: white;">${professor.university}</p>
+                                <p class="research" style="color: white;">${professor.research}</p>
+                            </div>
+                            <div class="email-status">
+                                <span class="status-badge">Ready to Send</span>
+                            </div>
+                        </div>
+                        <div class="email-content">
+                            <div class="email-preview">
+                                <p><strong>Subject:</strong> ${personalizedSubject}</p>
+                                <div class="email-body">
+                                    ${personalizedBody.replace(/\n/g, '<br>')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <span class="notification-message">${message}</span>
+                    <button class="notification-close" onclick="this.parentElement.parentElement.remove()">&times;</button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Show notification
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 3000);
+        }
+
+        // Close modals when clicking outside
+        document.getElementById('templateModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeTemplateEditor();
+            }
+        });
+
+        document.getElementById('previewModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePreview();
+            }
+        });
+
+        // Close modals with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeTemplateEditor();
+                closePreview();
+            }
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oppfinity - Connect with Research Opportunities</title>
+    <link rel="icon" type="image/png" href="opp-logo.png">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <link rel="preload" as="image" href="images/harvard.png">
+    <link rel="preload" as="image" href="images/mit.png">
+    <link rel="preload" as="image" href="images/stanford.png">
+    <link rel="preload" as="image" href="images/gtech.png">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="opp-logo.png" alt="Oppfinity Logo" class="logo-img">
+            <h1>Oppfinity</h1>
+        </div>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#userDashboard" class="dashboard-nav-link" id="dashboardNavLink" style="display: none;">Dashboard</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="#about-us">About Us</a>
+            <div id="authNavContainer">
+                <a href="auth.html" class="auth-nav-btn" id="authNavBtn">Login / Sign Up</a>
+                <div id="userNavProfile" class="user-nav-profile" style="display: none;">
+                    <span class="user-name-display">Welcome, User!</span>
+                    <button id="signOutNavBtn" class="sign-out-btn">Sign Out</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1 class="animate__animated animate__fadeInDown">Connect with Perfect Research Opportunities</h1>
+            <p class="animate__animated animate__fadeInUp">We use AI to help you target and send personalized emails to professors</p>
+            <a href="auth.html" class="cta-button animate__animated animate__fadeInUp">Get Started</a>
+        </div>
+    </section>
+
+    <!-- User Dashboard Section -->
+    <section id="userDashboard" class="user-dashboard" style="display: none;">
+        <div class="container">
+            <div class="dashboard-header">
+                <h2>Welcome to Your Dashboard</h2>
+                <p>Complete your profile to get matched with research opportunities</p>
+            </div>
+            
+            <div class="dashboard-content">
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="profile-avatar" id="dashboardProfileAvatar">
+                            <span id="dashboardUserInitial">U</span>
+                            <img id="dashboardProfilePhoto" src="" alt="Profile Photo" style="display: none;">
+                            <div class="upload-overlay">
+                                <svg fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <input type="file" id="dashboardProfilePhotoInput" accept="image/*" style="display: none;">
+                        </div>
+                        <div class="profile-info">
+                            <h3 id="dashboardUserName">User Name</h3>
+                            <p id="dashboardUserEmail">user@example.com</p>
+                        </div>
+                    </div>
+                    
+                    <form id="userProfileForm" class="profile-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fieldOfInterest">Field of Interest</label>
+                                <select id="fieldOfInterest" required>
+                                    <option value="">Select your field</option>
+                                    <option value="computer-science">Computer Science</option>
+                                    <option value="biology">Biology</option>
+                                    <option value="chemistry">Chemistry</option>
+                                    <option value="physics">Physics</option>
+                                    <option value="mathematics">Mathematics</option>
+                                    <option value="engineering">Engineering</option>
+                                    <option value="psychology">Psychology</option>
+                                    <option value="economics">Economics</option>
+                                    <option value="medicine">Medicine</option>
+                                    <option value="environmental-science">Environmental Science</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="dateOfBirth">Date of Birth</label>
+                                <input type="date" id="dateOfBirth" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="schoolName">School Name</label>
+                                <input type="text" id="schoolName" placeholder="Your high school" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="researchInterests">Specific Research Topics (Optional)</label>
+                                <input type="text" id="researchInterests">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="resumeUpload">Resume/CV Upload (Optional)</label>
+                            <div class="resume-upload-container">
+                                <input type="file" id="resumeUpload" accept=".pdf,.doc,.docx" style="display: none;">
+                                <div class="resume-upload-area" id="resumeUploadArea">
+                                    <div class="upload-icon">
+                                        <svg fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                                        </svg>
+                                    </div>
+                                    <p class="upload-text">Click to upload your resume or CV</p>
+                                    <p class="upload-hint">Supports PDF, DOC, DOCX (Max 5MB)</p>
+                                </div>
+                                <div class="resume-file-info" id="resumeFileInfo" style="display: none;">
+                                    <div class="file-details">
+                                        <span class="file-name" id="resumeFileName"></span>
+                                        <span class="file-size" id="resumeFileSize"></span>
+                                    </div>
+                                    <button type="button" class="remove-file-btn" id="removeResumeBtn">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="save-profile-btn">Save Profile</button>
+                    </form>
+                </div>
+                
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="circular-progress">
+                            <div class="circular-progress-ring">
+                                <svg class="circular-progress-svg" width="120" height="120">
+                                    <defs>
+                                        <linearGradient id="circularGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#00d4ff"/>
+                                            <stop offset="100%" stop-color="#764ba2"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <circle class="circular-progress-bg" cx="60" cy="60" r="54" stroke-width="8"></circle>
+                                    <circle class="circular-progress-bar" cx="60" cy="60" r="54" stroke-width="8" stroke-dasharray="339.292" stroke-dashoffset="339.292"></circle>
+                                </svg>
+                                <div class="circular-progress-text">
+                                    <span id="profileCompletion">0%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <h4>Profile Completion</h4>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Opportunities</h4>
+                        <button id="matchProfessorsBtn" class="match-professors-btn" style="display: none;">
+                            <span class="btn-text">Match Me with Professors</span>
+                            <span class="btn-icon">🎯</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" class="how-it-works">
+        <h2>How It Works</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Create Your Profile</h3>
+                <p>Tell us about your interests and research goals</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Find Professors</h3>
+                <p>Find professors around you that fit your research interests</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Get Connected</h3>
+                <p>We handle the cold emailing process for you, reaching out to all matching professors</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="about-us" class="about-us">
+        <h2>🎓 About Oppfinity</h2>
+        <p style="font-size: 1.2rem; margin-bottom: 3rem; opacity: 0.9;">Connecting ambitious students with leading research institutions worldwide</p>
+        
+        <!-- University Partnerships -->
+        <div class="university-partnerships">
+            <h3>Partner Universities</h3>
+            <div class="university-grid">
+                <div class="university-card">
+                    <div class="university-logo">
+                        <img src="images/harvard.png" alt="Harvard University Logo" loading="lazy"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                             onload="this.nextElementSibling.style.display='none';">
+                        <span class="logo-fallback" style="display:none;">🏛️</span>
+                    </div>
+                    <h4>Harvard University</h4>
+                    <p>Computer Science, Biology, Engineering</p>
+                    <div class="success-rate">68% Response Rate</div>
+                </div>
+                <div class="university-card">
+                    <div class="university-logo">
+                        <img src="images/mit.png" alt="MIT Logo" loading="lazy"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                             onload="this.nextElementSibling.style.display='none';">
+                        <span class="logo-fallback" style="display:none;">🔬</span>
+                    </div>
+                    <h4>MIT</h4>
+                    <p>Physics, Mathematics, Technology</p>
+                    <div class="success-rate">72% Response Rate</div>
+                </div>
+                <div class="university-card">
+                    <div class="university-logo">
+                        <img src="images/stanford.png" alt="Stanford University Logo" loading="lazy"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                             onload="this.nextElementSibling.style.display='none';">
+                        <span class="logo-fallback" style="display:none;">🌉</span>
+                    </div>
+                    <h4>Stanford University</h4>
+                    <p>Medicine, Psychology, Environmental Science</p>
+                    <div class="success-rate">65% Response Rate</div>
+                </div>
+                <div class="university-card">
+                    <div class="university-logo">
+                        <img src="images/gtech.png" alt="Georgia Tech Logo" loading="lazy"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                             onload="this.nextElementSibling.style.display='none';">
+                        <span class="logo-fallback" style="display:none;">⚡</span>
+                    </div>
+                    <h4>Georgia Tech</h4>
+                    <p>Engineering, Computer Science, Robotics</p>
+                    <div class="success-rate">71% Response Rate</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-section">
+            <h3>Our Impact</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">150+</div>
+                    <div class="stat-label">Professors Connected</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">300+</div>
+                    <div class="stat-label">Students Helped</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">35%</div>
+                    <div class="stat-label">Average Response Rate</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">25+</div>
+                    <div class="stat-label">Research Fields</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="cta-section">
+            <h3>Ready to Start Your Research Journey?</h3>
+            <p>Join hundreds of students who've found their perfect research opportunities</p>
+            <a href="auth.html" class="cta-button">Get Started Today</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Oppfinity</h3>
+                <p>Connecting students with research opportunities</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <a href="#home">Home</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#about-us">About Us</a>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p>Email: rarora2025@gmail.com</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Oppfinity. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Profile Completion Popup -->
+    <div id="profileCompletionPopup" class="profile-completion-popup" style="display: none;">
+        <div class="popup-content">
+            <div class="popup-header">
+                <div class="popup-icon">🎉</div>
+                <h3>Profile Complete!</h3>
+            </div>
+            <div class="popup-body">
+                <p>Congratulations! Your profile is 100% complete and ready for professor matching.</p>
+                <div class="popup-features">
+                    <div class="feature-item">
+                        <span class="feature-icon">🎯</span>
+                        <span>AI-powered professor matching</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">📧</span>
+                        <span>Personalized email outreach</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">📊</span>
+                        <span>Track your success</span>
+                    </div>
+                </div>
+            </div>
+            <div class="popup-actions">
+                <button id="popupMatchBtn" class="popup-match-btn">
+                    <span>Match Me with Professors</span>
+                    <span class="btn-arrow">→</span>
+                </button>
+                <button id="popupCloseBtn" class="popup-close-btn">Continue Editing</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+</body>
+</html> 

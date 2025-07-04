@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Your Plan - Oppfinity</title>
+    <link rel="icon" type="image/png" href="opp-logo.png">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="checkout-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Stripe.js -->
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="opp-logo.png" alt="Oppfinity Logo" class="logo-img">
+            <h1>Oppfinity</h1>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+                            <a href="index.html#userDashboard" class="back-btn">← Back to Dashboard</a>
+        </div>
+    </nav>
+
+    <div class="checkout-container">
+        <div class="checkout-header">
+            <h1>Choose Your Success Plan</h1>
+            <p>Select the perfect plan to maximize your research opportunities</p>
+        </div>
+
+        <div class="pricing-grid">
+            <!-- Basic Plan -->
+            <div class="pricing-card" data-plan="basic">
+                <div class="plan-header">
+                    <h3>Basic</h3>
+                    <div class="price">
+                        <span class="currency">$</span>
+                        <span class="amount">5</span>
+                        <span class="period">/one-time</span>
+                    </div>
+                    <p class="plan-subtitle">Perfect for getting started</p>
+                </div>
+                
+                <div class="plan-features">
+                    <div class="feature">
+                        <span class="feature-icon">🎯</span>
+                        <span class="feature-text">Professors are well known</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">📊</span>
+                        <span class="feature-text">Basic response rate</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">📧</span>
+                        <span class="feature-text">Up to 6 professors</span>
+                    </div>
+                </div>
+                
+                <button class="select-plan-btn" onclick="selectPlan('basic')">Select Basic</button>
+            </div>
+
+            <!-- Pro Plan -->
+            <div class="pricing-card featured" data-plan="pro">
+                <div class="popular-badge">Most Popular</div>
+                <div class="plan-header">
+                    <h3>Pro</h3>
+                    <div class="price">
+                        <span class="currency">$</span>
+                        <span class="amount">15</span>
+                        <span class="period">/one-time</span>
+                    </div>
+                    <p class="plan-subtitle">Best value for serious students</p>
+                </div>
+                
+                <div class="plan-features">
+                    <div class="feature">
+                        <span class="feature-icon">🎯</span>
+                        <span class="feature-text">Custom database of 100+ professors for one research topic</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">📊</span>
+                        <span class="feature-text">Higher response rate</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">📧</span>
+                        <span class="feature-text">Send up to 50 emails</span>
+                    </div>
+                </div>
+                
+                <button class="select-plan-btn featured" onclick="selectPlan('pro')">Select Pro</button>
+            </div>
+
+            <!-- Elite Plan -->
+            <div class="pricing-card" data-plan="elite">
+                <div class="plan-header">
+                    <h3>Elite</h3>
+                    <div class="price">
+                        <span class="currency">$</span>
+                        <span class="amount">50</span>
+                        <span class="period">/one-time</span>
+                    </div>
+                    <p class="plan-subtitle">Maximum research opportunities</p>
+                </div>
+                
+                <div class="plan-features">
+                    <div class="feature">
+                        <span class="feature-icon">🎯</span>
+                        <span class="feature-text">Database of unlimited topics</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">📊</span>
+                        <span class="feature-text">Highest response rate</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">📧</span>
+                        <span class="feature-text">Unlimited email sending</span>
+                    </div>
+                </div>
+                
+                <button class="select-plan-btn" onclick="selectPlan('elite')">Select Elite</button>
+            </div>
+        </div>
+
+        <div class="success-stats">
+            <h2>Why Students Choose Oppfinity</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Students Connected</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📧</div>
+                    <div class="stat-number">300+</div>
+                    <div class="stat-label">Emails Sent</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎓</div>
+                    <div class="stat-number">15%</div>
+                    <div class="stat-label">Average Response Rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-number">12+</div>
+                    <div class="stat-label">Research Placements</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="payment-modal" id="paymentModal">
+        <div class="payment-content">
+            <button class="close-modal" onclick="closePaymentModal()">&times;</button>
+            
+            <div class="payment-header">
+                <h2>Complete Your Purchase</h2>
+                <p>Enter your payment details to start connecting with professors</p>
+            </div>
+            
+            <div class="plan-summary" id="planSummary">
+                <!-- Plan summary will be populated by JavaScript -->
+            </div>
+            
+            <div class="payment-methods" id="paymentMethods">
+                <h3>Choose Payment Method</h3>
+                
+                <!-- Payment Method Tabs -->
+                <div class="payment-tabs">
+                    <button class="payment-tab active" onclick="switchPaymentMethod('card')" id="cardTab">
+                        <i class="fas fa-credit-card"></i>
+                        Credit Card
+                    </button>
+                    <button class="payment-tab" onclick="switchPaymentMethod('paypal')" id="paypalTab">
+                        <i class="fab fa-paypal"></i>
+                        PayPal
+                    </button>
+                    <button class="payment-tab" onclick="switchPaymentMethod('apple')" id="appleTab">
+                        <i class="fab fa-apple-pay"></i>
+                        Apple Pay
+                    </button>
+                </div>
+                
+                <!-- Credit Card Form -->
+                <form class="payment-form active" id="cardForm" style="display: block;">
+                    <div class="form-group">
+                        <label for="cardName">Cardholder Name</label>
+                        <input type="text" id="cardName" name="cardName" placeholder="John Doe" autocomplete="cc-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="card-element">Card Details</label>
+                        <div id="card-element" style="padding: 1rem; border: 2px solid #e0e0e0; border-radius: 10px; background: white;"></div>
+                        <div id="card-errors" style="color: #dc3545; font-size: 0.9rem; margin-top: 0.5rem;"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="your@email.com" autocomplete="email" required>
+                    </div>
+                </form>
+                
+                <!-- PayPal Form -->
+                <div class="payment-form" id="paypalForm" style="display: none;">
+                    <div class="paypal-container">
+                        <div class="paypal-info">
+                            <i class="fab fa-paypal" style="font-size: 2rem; color: #0070ba; margin-bottom: 1rem;"></i>
+                            <h4>Pay with PayPal</h4>
+                            <p>You'll be redirected to PayPal to complete your payment securely.</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="paypalEmail">PayPal Email</label>
+                            <input type="email" id="paypalEmail" name="paypalEmail" placeholder="your@email.com" autocomplete="email" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Apple Pay Form -->
+                <div class="payment-form" id="appleForm" style="display: none;">
+                    <div class="apple-pay-container">
+                        <div class="apple-pay-info">
+                            <i class="fab fa-apple-pay" style="font-size: 2rem; color: #000; margin-bottom: 1rem;"></i>
+                            <h4>Pay with Apple Pay</h4>
+                            <p>Use your Apple Pay account for quick and secure payment.</p>
+                        </div>
+                        <div id="apple-pay-button" class="apple-pay-button">
+                            <!-- Apple Pay button will be rendered here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="payment-actions">
+                <button class="cancel-btn" onclick="closePaymentModal()">Cancel</button>
+                <button class="pay-btn" id="payButton" onclick="processPayment()">
+                    <i class="fas fa-lock"></i>
+                    Pay Securely
+                </button>
+            </div>
+            
+            <div class="secure-payment">
+                <i class="fas fa-shield-alt"></i>
+                <span>All payments are secured with SSL encryption</span>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Oppfinity</h3>
+                <p>Connecting students with research opportunities</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <a href="index.html#home">Home</a>
+                <a href="index.html#how-it-works">How It Works</a>
+                <a href="index.html#about-us">About Us</a>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p>Email: rarora2025@gmail.com</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Oppfinity. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        // Check if user has selected professors
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectedProfessors = localStorage.getItem('selectedProfessors');
+            if (!selectedProfessors) {
+                // Redirect back to professor matching if no professors selected
+                window.location.href = 'professor-matching.html';
+                return;
+            }
+
+            // Parse selected professors
+            const professors = JSON.parse(selectedProfessors);
+            console.log('Selected professors for checkout:', professors);
+            
+            // Add input formatting
+            setupInputFormatting();
+        });
+
+        let currentPaymentMethod = 'card';
+        
+        function switchPaymentMethod(method) {
+            currentPaymentMethod = method;
+            
+            // Update tab states
+            document.querySelectorAll('.payment-tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(method + 'Tab').classList.add('active');
+            
+            // Update form visibility
+            document.querySelectorAll('.payment-form').forEach(form => {
+                form.classList.remove('active');
+                form.style.display = 'none';
+            });
+            
+            document.getElementById(method + 'Form').classList.add('active');
+            document.getElementById(method + 'Form').style.display = 'block';
+            
+            // Update pay button text
+            const payButton = document.getElementById('payButton');
+            switch(method) {
+                case 'card':
+                    payButton.innerHTML = '<i class="fas fa-lock"></i> Pay Securely';
+                    break;
+                case 'paypal':
+                    payButton.innerHTML = '<i class="fab fa-paypal"></i> Pay with PayPal';
+                    break;
+                case 'apple':
+                    payButton.innerHTML = '<i class="fab fa-apple-pay"></i> Pay with Apple Pay';
+                    break;
+            }
+            
+            // Initialize Apple Pay if needed
+            if (method === 'apple') {
+                initializeApplePay();
+            }
+        }
+        
+        function selectPlan(plan) {
+            console.log('Selecting plan:', plan);
+            // Store selected plan
+            localStorage.setItem('selectedPlan', plan);
+            
+            // Get plan details
+            const planDetails = {
+                basic: {
+                    name: 'Basic',
+                    price: 5,
+                    emails: 6,
+                    database: 'Basic GPT model',
+                    successRate: 'Basic response rate',
+                    features: [
+                        'Professors are well known',
+                        'Basic response rate',
+                        'Up to 6 professors'
+                    ]
+                },
+                pro: {
+                    name: 'Pro',
+                    price: 15,
+                    emails: 50,
+                    database: '100+ professors for one topic',
+                    successRate: 'Higher response rate',
+                    features: [
+                        'Custom database of 100+ professors for one research topic',
+                        'Higher response rate',
+                        'Send up to 50 emails'
+                    ]
+                },
+                elite: {
+                    name: 'Elite',
+                    price: 50,
+                    emails: 'Unlimited',
+                    database: 'Unlimited topics',
+                    successRate: 'Highest response rate',
+                    features: [
+                        'Database of unlimited topics',
+                        'Highest response rate',
+                        'Unlimited email sending'
+                    ]
+                }
+            };
+
+            const selectedPlan = planDetails[plan];
+            
+            // Populate plan summary
+            const priceText = selectedPlan.price === 0 ? 'Free' : `$${selectedPlan.price}/one-time`;
+            document.getElementById('planSummary').innerHTML = `
+                <h3>${selectedPlan.name} Plan - ${priceText}</h3>
+                <ul>
+                    ${selectedPlan.features.map(feature => `<li>${feature}</li>`).join('')}
+                </ul>
+            `;
+            
+            // Show payment modal
+            console.log('Showing payment modal');
+            document.getElementById('paymentModal').classList.add('active');
+            
+            // Show payment methods
+            const paymentMethods = document.getElementById('paymentMethods');
+            paymentMethods.style.display = 'block';
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.remove('active');
+            
+            // Reset all forms
+            document.getElementById('cardForm').reset();
+            document.getElementById('paypalForm').reset();
+            
+            // Reset to card payment method
+            currentPaymentMethod = 'card';
+            switchPaymentMethod('card');
+        }
+
+        function setupInputFormatting() {
+            // Card number formatting
+            const cardNumber = document.getElementById('cardNumber');
+            if (cardNumber) {
+                cardNumber.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+                    let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+                    e.target.value = formattedValue;
+                });
+            }
+
+            // Expiry date formatting
+            const expiry = document.getElementById('expiry');
+            if (expiry) {
+                expiry.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length >= 2) {
+                        value = value.slice(0, 2) + '/' + value.slice(2, 4);
+                    }
+                    e.target.value = value;
+                });
+            }
+
+            // CVV formatting
+            const cvv = document.getElementById('cvv');
+            if (cvv) {
+                cvv.addEventListener('input', function(e) {
+                    e.target.value = e.target.value.replace(/\D/g, '');
+                });
+            }
+        }
+
+        function processPayment() {
+            console.log('Processing payment for method:', currentPaymentMethod);
+            const selectedPlan = localStorage.getItem('selectedPlan');
+            
+            // Handle different payment methods
+            switch(currentPaymentMethod) {
+                case 'card':
+                    processCardPayment();
+                    break;
+                case 'paypal':
+                    processPayPalPayment();
+                    break;
+                case 'apple':
+                    processApplePayPayment();
+                    break;
+                default:
+                    processCardPayment();
+            }
+        }
+        
+        // Initialize Stripe
+        let stripe;
+        let elements;
+        let cardElement;
+        
+        // Initialize Stripe when the page loads
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                // Fetch publishable key from server
+                const response = await fetch('/api/stripe-key');
+                const data = await response.json();
+                
+                // Initialize Stripe with fetched key
+                stripe = Stripe(data.publishableKey);
+                elements = stripe.elements();
+                
+                console.log('✅ Stripe initialized with fetched key');
+            } catch (error) {
+                console.error('❌ Failed to initialize Stripe:', error);
+                alert('Payment system is not available. Please try again later.');
+                return;
+            }
+            
+            // Create card element
+            cardElement = elements.create('card', {
+                style: {
+                    base: {
+                        fontSize: '16px',
+                        color: '#424770',
+                        '::placeholder': {
+                            color: '#aab7c4',
+                        },
+                    },
+                    invalid: {
+                        color: '#9e2146',
+                    },
+                },
+            });
+            
+            // Mount card element
+            cardElement.mount('#card-element');
+        });
+        
+        function processCardPayment() {
+            const selectedPlan = localStorage.getItem('selectedPlan');
+            
+            // Get plan details
+            const planDetails = {
+                basic: { name: 'Basic', price: 500 }, // $5.00 in cents
+                pro: { name: 'Pro', price: 1500 },    // $15.00 in cents
+                elite: { name: 'Elite', price: 5000 } // $50.00 in cents
+            };
+            
+            const plan = planDetails[selectedPlan];
+            if (!plan) {
+                alert('Please select a plan first');
+                return;
+            }
+            
+            // Show loading state
+            const payBtn = document.getElementById('payButton');
+            payBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            payBtn.disabled = true;
+            
+            // Create payment intent on the server
+            fetch('/.netlify/functions/create-payment-intent', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    plan: selectedPlan,
+                    amount: plan.price
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                // Confirm payment with Stripe
+                return stripe.confirmCardPayment(data.clientSecret, {
+                    payment_method: {
+                        card: cardElement,
+                        billing_details: {
+                            name: document.getElementById('cardName').value.trim(),
+                            email: document.getElementById('email').value.trim()
+                        }
+                    }
+                });
+            })
+            .then(result => {
+                if (result.error) {
+                    // Payment failed
+                    throw new Error(result.error.message);
+                } else if (result.paymentIntent.status === 'succeeded') {
+                    // Payment successful
+                    showPaymentSuccess(plan.name);
+                    
+                    // Confirm payment on server
+                    return fetch('/.netlify/functions/confirm-payment', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            paymentIntentId: result.paymentIntent.id,
+                            plan: selectedPlan
+                        })
+                    });
+                }
+            })
+            .then(response => {
+                if (response) {
+                    return response.json();
+                }
+            })
+            .then(data => {
+                if (data && data.success) {
+                    console.log('Payment confirmed on server');
+                }
+            })
+            .catch(error => {
+                console.error('Payment failed:', error);
+                alert('Payment failed: ' + error.message);
+                
+                // Reset button
+                const payBtn = document.getElementById('payButton');
+                payBtn.innerHTML = '<i class="fas fa-lock"></i> Pay Securely';
+                payBtn.disabled = false;
+            });
+        }
+        
+        function showPaymentSuccess(planName) {
+            document.querySelector('.payment-content').innerHTML = `
+                <div style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 4rem; color: #2ecc71; margin-bottom: 1rem;">✅</div>
+                    <h2 style="color: #2ecc71; margin-bottom: 1rem;">Payment Successful!</h2>
+                    <p style="color: #666; margin-bottom: 2rem;">
+                        Your ${planName} plan has been activated. You can now start sending emails to professors!
+                    </p>
+                    <button class="pay-btn" onclick="window.location.href='success.html'">
+                        <i class="fas fa-rocket"></i>
+                        Start Sending Emails
+                    </button>
+                </div>
+            `;
+            
+            // Store payment success
+            localStorage.setItem('paymentSuccess', 'true');
+            localStorage.setItem('activePlan', localStorage.getItem('selectedPlan'));
+        }
+        
+        function processPayPalPayment() {
+            const selectedPlan = localStorage.getItem('selectedPlan');
+            const paypalEmail = document.getElementById('paypalEmail').value.trim();
+            
+            if (!paypalEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(paypalEmail)) {
+                alert('Please enter a valid PayPal email address');
+                return;
+            }
+            
+            // Get plan details
+            const planDetails = {
+                basic: { name: 'Basic', price: 500 },
+                pro: { name: 'Pro', price: 1500 },
+                elite: { name: 'Elite', price: 5000 }
+            };
+            
+            const plan = planDetails[selectedPlan];
+            if (!plan) {
+                alert('Please select a plan first');
+                return;
+            }
+            
+            // Show loading state
+            const payBtn = document.getElementById('payButton');
+            payBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Redirecting to PayPal...';
+            payBtn.disabled = true;
+            
+            // Create payment intent for PayPal
+            fetch('/.netlify/functions/create-payment-intent', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    plan: selectedPlan,
+                    amount: plan.price
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                // For PayPal, we would typically redirect to PayPal's checkout
+                // For now, we'll simulate the redirect and success
+                alert('PayPal integration requires additional setup. Please use credit card payment for now.');
+                
+                // Reset button
+                const payBtn = document.getElementById('payButton');
+                payBtn.innerHTML = '<i class="fab fa-paypal"></i> Pay with PayPal';
+                payBtn.disabled = false;
+            })
+            .catch(error => {
+                console.error('PayPal payment failed:', error);
+                alert('PayPal payment failed: ' + error.message);
+                
+                // Reset button
+                const payBtn = document.getElementById('payButton');
+                payBtn.innerHTML = '<i class="fab fa-paypal"></i> Pay with PayPal';
+                payBtn.disabled = false;
+            });
+        }
+        
+        function processApplePayPayment() {
+            const selectedPlan = localStorage.getItem('selectedPlan');
+            
+            // Get plan details
+            const planDetails = {
+                basic: { name: 'Basic', price: 500 },
+                pro: { name: 'Pro', price: 1500 },
+                elite: { name: 'Elite', price: 5000 }
+            };
+            
+            const plan = planDetails[selectedPlan];
+            if (!plan) {
+                alert('Please select a plan first');
+                return;
+            }
+            
+            // Show loading state
+            const payBtn = document.getElementById('payButton');
+            payBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Apple Pay...';
+            payBtn.disabled = true;
+            
+            // For Apple Pay, we would use Stripe's Apple Pay integration
+            // For now, we'll show a message that it requires additional setup
+            alert('Apple Pay integration requires additional setup. Please use credit card payment for now.');
+            
+            // Reset button
+            payBtn.innerHTML = '<i class="fab fa-apple-pay"></i> Pay with Apple Pay';
+            payBtn.disabled = false;
+        }
+        
+        function initializeApplePay() {
+            // Check if Apple Pay is available
+            if (window.ApplePaySession && ApplePaySession.canMakePayments()) {
+                const applePayButton = document.getElementById('apple-pay-button');
+                applePayButton.innerHTML = `
+                    <button class="apple-pay-button" onclick="processApplePayPayment()">
+                        <i class="fab fa-apple-pay"></i>
+                        Pay with Apple Pay
+                    </button>
+                `;
+            } else {
+                const applePayButton = document.getElementById('apple-pay-button');
+                applePayButton.innerHTML = `
+                    <div style="color: #999; padding: 1rem;">
+                        <i class="fas fa-info-circle"></i>
+                        Apple Pay is not available on this device
+                    </div>
+                `;
+            }
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('paymentModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePaymentModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closePaymentModal();
+            }
+        });
+    </script>
+</body>
+</html> 

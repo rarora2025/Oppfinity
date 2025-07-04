@@ -1,0 +1,17 @@
+<svg width="120" height="80" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="harvardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#A51C30;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8B1538;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Harvard Shield -->
+  <path d="M60 10 L80 25 L80 45 L60 60 L40 45 L40 25 Z" fill="url(#harvardGrad)" stroke="#A51C30" stroke-width="2"/>
+  
+  <!-- "H" in the shield -->
+  <text x="60" y="42" font-family="Georgia, serif" font-size="16" font-weight="bold" text-anchor="middle" fill="white">H</text>
+  
+  <!-- University name -->
+  <text x="60" y="75" font-family="Georgia, serif" font-size="10" font-weight="bold" text-anchor="middle" fill="#A51C30">HARVARD</text>
+</svg> 

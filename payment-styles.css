@@ -1,0 +1,203 @@
+/* Payment Form Styles - Separate from main styles.css */
+
+/* Payment Container */
+.payment-container {
+    max-width: 800px;
+    margin: 6rem auto 0;
+    padding: 2rem;
+    text-align: center;
+    color: #333; /* Ensure text is visible */
+}
+
+.payment-container h1 {
+    color: #333;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.payment-container p {
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+/* Payment Card */
+.payment-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    margin-top: 2rem;
+    color: #333; /* Ensure text is visible */
+}
+
+/* Plan Options */
+.plan-options {
+    display: flex;
+    justify-content: space-around;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.plan-card {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    width: 250px;
+    transition: transform 0.3s;
+    color: #333; /* Ensure text is visible */
+}
+
+.plan-card:hover {
+    transform: translateY(-5px);
+}
+
+.plan-card.selected {
+    border: 2px solid #4CAF50;
+}
+
+.plan-card h3 {
+    color: #333;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.plan-price {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #4CAF50;
+    margin: 1rem 0;
+}
+
+.plan-features {
+    text-align: left;
+    margin: 1rem 0;
+    list-style: none;
+    padding: 0;
+}
+
+.plan-features li {
+    margin: 0.5rem 0;
+    display: flex;
+    align-items: center;
+    color: #333; /* Ensure text is visible */
+}
+
+.plan-features li::before {
+    content: "✓";
+    color: #4CAF50;
+    margin-right: 0.5rem;
+    font-weight: bold;
+}
+
+/* Payment Form */
+#payment-form {
+    max-width: 500px;
+    margin: 2rem auto;
+    color: #333; /* Ensure text is visible */
+}
+
+.form-row {
+    margin: 1rem 0;
+    text-align: left;
+}
+
+.form-row label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+#card-element {
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    color: #333; /* Ensure text is visible */
+}
+
+#card-element:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+#card-errors {
+    color: #dc3545;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    text-align: left;
+}
+
+#submit-button {
+    background: #4CAF50;
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.3s;
+    font-size: 1.1rem;
+}
+
+#submit-button:hover {
+    background: #45a049;
+}
+
+#submit-button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+/* Stripe Elements Override */
+.StripeElement {
+    color: #333 !important;
+    background: white !important;
+}
+
+.StripeElement--focus {
+    border-color: #4CAF50 !important;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2) !important;
+}
+
+.StripeElement--invalid {
+    border-color: #dc3545 !important;
+}
+
+/* Ensure all text in payment form is visible */
+.payment-container * {
+    color: inherit;
+}
+
+.payment-container input,
+.payment-container textarea,
+.payment-container select {
+    color: #333 !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .payment-container {
+        padding: 1rem;
+        margin-top: 4rem;
+    }
+    
+    .payment-container h1 {
+        font-size: 2rem;
+    }
+    
+    .plan-card {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .payment-card {
+        padding: 1.5rem;
+    }
+} 

@@ -1,0 +1,246 @@
+<!--
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cold Email Generator - Oppfinity</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .generator-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            color: white;
+        }
+        
+        .generator-container h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+        
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            background: rgba(255,255,255,0.9);
+            color: #333;
+        }
+        
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+        }
+        
+        .generate-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .email-output {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            border: 2px solid rgba(255,255,255,0.2);
+            display: none;
+        }
+        
+        .email-output h3 {
+            margin-bottom: 15px;
+            color: #fff;
+        }
+        
+        .email-content {
+            background: white;
+            color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        
+        .copy-btn {
+            background: #2ecc71;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-weight: 600;
+        }
+        
+        .copy-btn:hover {
+            background: #27ae60;
+        }
+        
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-btn">← Back to Home</a>
+    
+    <div class="generator-container">
+        <h1>🤖 Cold Email Generator</h1>
+        <form id="emailForm">
+            <div class="form-group">
+                <label for="studentName">Your Name:</label>
+                <input type="text" id="studentName" required>
+        </div>
+            
+            <div class="form-group">
+                <label for="studentSchool">Your School:</label>
+                <input type="text" id="studentSchool" required>
+        </div>
+
+            <div class="form-group">
+                <label for="studentGrade">Your Grade:</label>
+                <select id="studentGrade" required>
+                    <option value="">Select Grade</option>
+                    <option value="9th">9th Grade</option>
+                    <option value="10th">10th Grade</option>
+                    <option value="11th">11th Grade</option>
+                    <option value="12th">12th Grade</option>
+                </select>
+            </div>
+            
+                <div class="form-group">
+                <label for="professorName">Professor's Name:</label>
+                <input type="text" id="professorName" required>
+                </div>
+                
+                <div class="form-group">
+                <label for="university">University:</label>
+                <input type="text" id="university" required>
+                </div>
+                
+            <div class="form-group">
+                <label for="researchArea">Research Area of Interest:</label>
+                <input type="text" id="researchArea" placeholder="e.g., Artificial Intelligence, Quantum Computing, etc." required>
+        </div>
+
+            <div class="form-group">
+                <label for="studentBackground">Your Background/Experience:</label>
+                <textarea id="studentBackground" placeholder="Describe your relevant coursework, projects, skills, or any experience related to the research area..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="specificInterest">Why are you interested in this specific research?</label>
+                <textarea id="specificInterest" placeholder="Explain what specifically draws you to this professor's work or research area..."></textarea>
+        </div>
+
+            <button type="submit" class="generate-btn">🚀 Generate Cold Email</button>
+        </form>
+
+        <div id="emailOutput" class="email-output">
+            <h3>📧 Your Generated Email:</h3>
+            <div id="emailContent" class="email-content"></div>
+            <button id="copyBtn" class="copy-btn">📋 Copy to Clipboard</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('emailForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const studentName = document.getElementById('studentName').value;
+            const studentSchool = document.getElementById('studentSchool').value;
+            const studentGrade = document.getElementById('studentGrade').value;
+            const professorName = document.getElementById('professorName').value;
+            const university = document.getElementById('university').value;
+            const researchArea = document.getElementById('researchArea').value;
+            const studentBackground = document.getElementById('studentBackground').value;
+            const specificInterest = document.getElementById('specificInterest').value;
+            
+            const email = generateEmail(studentName, studentSchool, studentGrade, professorName, university, researchArea, studentBackground, specificInterest);
+            
+            document.getElementById('emailContent').textContent = email;
+            document.getElementById('emailOutput').style.display = 'block';
+            
+            // Scroll to the output
+            document.getElementById('emailOutput').scrollIntoView({ behavior: 'smooth' });
+            });
+        
+        function generateEmail(name, school, grade, professor, university, research, background, interest) {
+            const subject = `Research Opportunity Inquiry - ${research}`;
+            
+            const email = `Subject: ${subject}
+
+Dear Professor ${professor},
+
+I hope this email finds you well. My name is ${name}, and I am a ${grade} student at ${school}. I am writing to express my strong interest in the research opportunities available in your ${research} laboratory at ${university}.
+
+${background ? `My background includes ${background}. ` : ''}${interest ? `I am particularly drawn to your work because ${interest}. ` : ''}I am eager to contribute to cutting-edge research and believe that working in your laboratory would provide me with invaluable experience and mentorship.
+
+I would greatly appreciate the opportunity to discuss potential research opportunities, whether through a formal internship, volunteer position, or any other capacity where I could contribute to your ongoing projects. I am flexible with my schedule and committed to dedicating the time necessary to make meaningful contributions to your research.
+
+Thank you for considering my application. I look forward to hearing from you and would be happy to provide any additional information about my background or discuss how I might contribute to your research team.
+
+Best regards,
+${name}
+${school}
+${grade} Student`;
+
+            return email;
+        }
+        
+        document.getElementById('copyBtn').addEventListener('click', function() {
+            const emailContent = document.getElementById('emailContent').textContent;
+            navigator.clipboard.writeText(emailContent).then(function() {
+                alert('Email copied to clipboard!');
+            });
+        });
+    </script>
+</body>
+</html> 
+--> 
