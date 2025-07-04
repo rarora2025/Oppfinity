@@ -75,8 +75,8 @@
     </footer>
 
     <script>
-        // Stripe public key
-        const stripe = Stripe('pk_live_51RG2OLA9NPiijwfcdkynVJVgUIfdwdIEG6RmXI3wSoTftXjvPls6Y1kDGbtB3ELlakMGu9cYFYyxivNidPwlGYiB00IhLCh7ZW');
+        // Stripe test public key
+        const stripe = Stripe('pk_test_51RG2OLA9NPiijwfcdkynVJVgUIfdwdIEG6RmXI3wSoTftXjvPls6Y1kDGbtB3ELlakMGu9cYFYyxivNidPwlGYiB00IhLCh7ZW');
         const elements = stripe.elements();
         const card = elements.create('card');
         card.mount('#card-element');

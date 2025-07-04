@@ -485,8 +485,8 @@
         // Initialize Stripe when the page loads
         document.addEventListener('DOMContentLoaded', async function() {
             try {
-                // Initialize Stripe with publishable key
-                stripe = Stripe('pk_live_51RG2OLA9NPiijwfcdkynVJVgUIfdwdIEG6RmXI3wSoTftXjvPls6Y1kDGbtB3ELlakMGu9cYFYyxivNidPwlGYiB00IhLCh7ZW');
+                // Initialize Stripe with test publishable key
+                stripe = Stripe('pk_test_51RG2OLA9NPiijwfcdkynVJVgUIfdwdIEG6RmXI3wSoTftXjvPls6Y1kDGbtB3ELlakMGu9cYFYyxivNidPwlGYiB00IhLCh7ZW');
                 elements = stripe.elements();
                 
                 console.log('✅ Stripe initialized with publishable key');
