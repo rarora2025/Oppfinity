@@ -400,9 +400,25 @@
         function closePaymentModal() {
             document.getElementById('paymentModal').classList.remove('active');
             
-            // Reset all forms
-            document.getElementById('cardForm').reset();
-            document.getElementById('paypalForm').reset();
+            // Reset form inputs manually since they're divs, not forms
+            const cardInputs = document.querySelectorAll('#cardForm input');
+            cardInputs.forEach(input => {
+                if (input.type !== 'submit' && input.type !== 'button') {
+                    input.value = '';
+                }
+            });
+            
+            const paypalInputs = document.querySelectorAll('#paypalForm input');
+            paypalInputs.forEach(input => {
+                if (input.type !== 'submit' && input.type !== 'button') {
+                    input.value = '';
+                }
+            });
+            
+            // Clear card element
+            if (cardElement) {
+                cardElement.clear();
+            }
             
             // Reset to card payment method
             currentPaymentMethod = 'card';
