@@ -11,10 +11,9 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
-# API keys and secrets
-*.key
-*.pem
-secrets.json
+# Build outputs
+dist/
+build/
 
 # OS generated files
 .DS_Store
@@ -32,15 +31,18 @@ Thumbs.db
 *.swo
 
 # Logs
+logs
 *.log
 
-# Build outputs
-dist/
-build/
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
 
-# Local Netlify folder
-.netlify
+# Coverage directory used by tools like istanbul
+coverage/
 
-# Temporary files
-*.tmp
-*.temp
+# Temporary folders
+tmp/
+temp/
