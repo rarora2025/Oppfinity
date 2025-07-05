@@ -554,16 +554,26 @@
                     throw new Error(data.error);
                 }
                 
-                // Confirm payment with Stripe
-                return stripe.confirmCardPayment(data.clientSecret, {
-                    payment_method: {
-                        card: cardElement,
-                        billing_details: {
-                            name: document.getElementById('cardName').value.trim(),
-                            email: document.getElementById('email').value.trim()
-                        }
+                            // Get user information
+            const userName = document.getElementById('cardName').value.trim();
+            const userEmail = document.getElementById('email').value.trim();
+            
+            // Get current user ID from Firebase if available
+            let userId = null;
+            if (window.auth && window.auth.currentUser) {
+                userId = window.auth.currentUser.uid;
+            }
+            
+            // Confirm payment with Stripe
+            return stripe.confirmCardPayment(data.clientSecret, {
+                payment_method: {
+                    card: cardElement,
+                    billing_details: {
+                        name: userName,
+                        email: userEmail
                     }
-                });
+                }
+            });
             })
             .then(result => {
                 if (result.error) {
@@ -581,7 +591,10 @@
                         },
                         body: JSON.stringify({
                             paymentIntentId: result.paymentIntent.id,
-                            plan: selectedPlan
+                            plan: selectedPlan,
+                            userEmail: userEmail,
+                            userName: userName,
+                            userId: userId
                         })
                     });
                 }

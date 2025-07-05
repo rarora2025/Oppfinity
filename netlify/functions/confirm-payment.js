@@ -9,14 +9,34 @@ exports.handler = async (event) => {
     }
 
     try {
-        const { paymentIntentId, plan } = JSON.parse(event.body);
+        const { paymentIntentId, plan, userEmail, userName, userId } = JSON.parse(event.body);
 
         // Retrieve the payment intent to check its status
         const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
 
         if (paymentIntent.status === 'succeeded') {
-            // Payment was successful, you can add additional logic here
-            // like updating user subscription, sending confirmation emails, etc.
+            // Call the process-payment-success function to handle email and Firebase updates
+            try {
+                const processResponse = await fetch(`${process.env.URL}/.netlify/functions/process-payment-success`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        paymentIntentId: paymentIntentId,
+                        plan: plan,
+                        userEmail: userEmail || paymentIntent.receipt_email || paymentIntent.customer_details?.email,
+                        userName: userName || paymentIntent.customer_details?.name,
+                        userId: userId || paymentIntent.metadata?.userId
+                    })
+                });
+
+                const processResult = await processResponse.json();
+                console.log('Payment processing result:', processResult);
+            } catch (processError) {
+                console.error('Failed to process payment success:', processError);
+                // Continue even if processing fails
+            }
             
             return {
                 statusCode: 200,
